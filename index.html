@@ -1,0 +1,1714 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWN IMPORTS — Ropa de Calle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --surface: #111;
+  --surface2: #1a1a1a;
+  --text: #f5f5f5;
+  --text-muted: #888;
+  --accent: #fff;
+  --accent2: #999;
+  --border: #222;
+  --glow: rgba(255,255,255,0.05);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+/* ===== NAV ===== */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+  mix-blend-mode: difference;
+}
+nav.scrolled {
+  background: rgba(10,10,10,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 14px 40px;
+  border-bottom: 1px solid var(--border);
+  mix-blend-mode: normal;
+}
+.logo {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--text);
+}
+.logo span { font-weight: 300; }
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  position: relative;
+  transition: opacity 0.3s;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 1px;
+  background: var(--text);
+  transition: width 0.3s ease;
+}
+.nav-links a:hover::after { width: 100%; }
+.nav-links a:hover { opacity: 0.7; }
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* ===== HERO ===== */
+#hero {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+#hero-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+}
+.hero-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
+  z-index: 1;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 80px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.hero-content .subtitle {
+  font-size: 14px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeUp 1s 0.3s forwards;
+}
+.hero-logo-wrap {
+  opacity: 0;
+  animation: fadeUp 1s 0.5s forwards;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+  margin-bottom: 10px;
+}
+.hero-logo {
+  max-width: min(90vw, 600px);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 0 40px rgba(255,255,255,0.08)) drop-shadow(0 0 80px rgba(255,255,255,0.04));
+  transition: filter 0.6s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.hero-logo:hover {
+  filter: drop-shadow(0 0 60px rgba(255,255,255,0.18)) drop-shadow(0 0 120px rgba(255,255,255,0.08));
+}
+.hero-content .desc {
+  font-size: 16px;
+  color: var(--text-muted);
+  max-width: 440px;
+  margin-top: 30px;
+  line-height: 1.6;
+  opacity: 0;
+  animation: fadeUp 1s 0.7s forwards;
+}
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 40px;
+  padding: 16px 36px;
+  border: 1px solid var(--text);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  transition: all 0.4s ease;
+  width: fit-content;
+  opacity: 0;
+  animation: fadeUp 1s 0.9s forwards;
+  position: relative;
+  overflow: hidden;
+}
+.hero-cta::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: var(--text);
+  transition: left 0.4s ease;
+  z-index: -1;
+}
+.hero-cta:hover {
+  color: var(--bg);
+}
+.hero-cta:hover::before { left: 0; }
+
+.hero-scroll {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: fadeUp 1s 1.2s forwards;
+}
+.hero-scroll span {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--text-muted), transparent);
+  animation: scrollPulse 2s infinite;
+}
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(30px); }
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+
+/* ===== 3D CAROUSEL ===== */
+.carousel-section {
+  position: relative;
+  padding: 80px 40px 120px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.carousel-section .section-header {
+  margin-bottom: 60px;
+}
+.carousel-3d-wrap {
+  position: relative;
+  height: 500px;
+  max-width: 1000px;
+  margin: 0 auto;
+  perspective: 1200px;
+}
+.carousel-3d {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+}
+.carousel-3d-item {
+  position: absolute;
+  width: 380px;
+  height: 520px;
+  left: 50%;
+  top: 50%;
+  margin-left: -190px;
+  margin-top: -260px;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: grab;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.9s cubic-bezier(0.22,1,0.36,1), filter 0.8s cubic-bezier(0.22,1,0.36,1), box-shadow 0.8s ease, opacity 0.8s cubic-bezier(0.22,1,0.36,1);
+  box-shadow: 0 0 30px rgba(0,0,0,0.4);
+  border: 1px solid var(--border);
+}
+.carousel-3d-item::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.04) 50%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+  transform: translateX(-100%) rotate(25deg);
+}
+.carousel-3d-item:hover::after {
+  opacity: 1;
+  transform: translateX(100%) rotate(25deg);
+  transition: transform 0.8s ease, opacity 0.3s ease;
+}
+.carousel-3d-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  transition: transform 1.2s cubic-bezier(0.22,1,0.36,1);
+}
+.carousel-3d-item.active {
+  box-shadow: 0 0 60px rgba(255,255,255,0.08), 0 0 120px rgba(255,255,255,0.04), 0 0 200px rgba(255,255,255,0.02);
+  border-color: rgba(255,255,255,0.2);
+  animation: activePulse 4s ease-in-out infinite;
+}
+.carousel-3d-item.active img {
+  transform: scale(1.05);
+}
+@keyframes activePulse {
+  0%, 100% { box-shadow: 0 0 60px rgba(255,255,255,0.08), 0 0 120px rgba(255,255,255,0.04); }
+  50% { box-shadow: 0 0 80px rgba(255,255,255,0.12), 0 0 160px rgba(255,255,255,0.06), 0 0 240px rgba(255,255,255,0.03); }
+}
+.carousel-nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 30px;
+}
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #333;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+.carousel-dot.active {
+  background: var(--text);
+  width: 24px;
+  border-radius: 4px;
+}
+.carousel-arrows {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+.carousel-arrow {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+.carousel-arrow:hover {
+  border-color: var(--text);
+  background: rgba(255,255,255,0.05);
+}
+
+/* ===== PRODUCT MODAL ===== */
+.product-modal {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 9998;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  padding: 24px;
+}
+.product-modal.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.product-modal-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  max-width: 720px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+  max-height: 90vh;
+  overflow: auto;
+}
+.product-modal.open .product-modal-content {
+  transform: scale(1) translateY(0);
+}
+.product-modal-image {
+  position: relative;
+  overflow: hidden;
+  min-height: 400px;
+}
+.product-modal-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: absolute;
+  top: 0; left: 0;
+}
+.product-modal-info {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.product-modal-info .modal-category {
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.product-modal-info .modal-name {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.product-modal-info .modal-price {
+  font-size: 22px;
+  font-weight: 700;
+}
+.product-modal-info .modal-price .original {
+  font-size: 15px;
+  color: var(--text-muted);
+  text-decoration: line-through;
+  font-weight: 400;
+  margin-right: 10px;
+}
+.product-modal-info .modal-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-top: 4px;
+}
+.modal-sizes {
+  margin-top: 4px;
+}
+.modal-sizes-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.modal-sizes-grid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.modal-size-btn {
+  min-width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-size-btn:hover {
+  border-color: var(--text);
+  background: rgba(255,255,255,0.05);
+}
+.modal-size-btn.selected {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--bg);
+}
+.modal-stock {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.modal-stock .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.modal-stock .dot.available { background: #4ade80; }
+.modal-stock .dot.low { background: #fbbf24; }
+.modal-stock .dot.empty { background: #ef4444; }
+.modal-cta {
+  margin-top: 8px;
+  padding: 14px 32px;
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+}
+.modal-cta:hover {
+  background: #ccc;
+}
+.modal-img-nav {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+.modal-img-thumb {
+  width: 44px;
+  height: 44px;
+  border: 2px solid transparent;
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(0,0,0,0.5);
+}
+.modal-img-thumb.active {
+  border-color: var(--text);
+}
+.modal-img-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.modal-img-thumb:hover {
+  border-color: rgba(255,255,255,0.5);
+}
+
+.product-modal-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.product-modal-close:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: var(--text);
+}
+@media (max-width: 640px) {
+  .product-modal-content {
+    grid-template-columns: 1fr;
+  }
+  .product-modal-image {
+    min-height: 260px;
+  }
+  .product-modal-info {
+    padding: 24px;
+  }
+}
+
+/* ===== LIGHTBOX ===== */
+.lightbox {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 9999;
+  background: rgba(0,0,0,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  cursor: zoom-out;
+}
+.lightbox.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.lightbox img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  transform: scale(0.9);
+  transition: transform 0.4s ease;
+}
+.lightbox.open img {
+  transform: scale(1);
+}
+.lightbox-close {
+  position: absolute;
+  top: 24px; right: 24px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+.lightbox-close:hover { opacity: 1; }
+
+/* ===== SECTIONS ===== */
+.section {
+  padding: 120px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.section-header {
+  margin-bottom: 80px;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.section-header.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.section-tag {
+  font-size: 12px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1.1;
+}
+.section-title .light { font-weight: 300; }
+
+/* ===== ABOUT ===== */
+#about {
+  border-top: 1px solid var(--border);
+  position: relative;
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.about-text p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+.about-text .highlight {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.6;
+}
+.about-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+.stat {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.stat.visible { opacity: 1; transform: translateY(0); }
+.stat-number {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+/* ===== PRODUCTS ===== */
+#productos {
+  background: var(--surface);
+}
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+.product-card {
+  position: relative;
+  background: var(--surface2);
+  overflow: hidden;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.product-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.product-card-inner {
+  position: relative;
+  overflow: hidden;
+}
+.product-card img {
+  width: 100%;
+  height: 480px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.product-card:hover img {
+  transform: scale(1.08);
+}
+.product-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 30px 24px 24px;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+  transform: translateY(10px);
+  transition: transform 0.4s ease;
+}
+.product-card:hover .product-info {
+  transform: translateY(0);
+}
+.product-name {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.product-category {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.product-price {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 8px;
+  color: var(--text);
+}
+.product-price .original {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: line-through;
+  font-weight: 400;
+  margin-right: 8px;
+}
+
+.product-overlay {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+}
+.product-badge {
+  background: var(--text);
+  color: var(--bg);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+}
+
+/* ===== VALUES ===== */
+#valores {
+  border-top: 1px solid var(--border);
+}
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+.value-card {
+  padding: 40px;
+  border: 1px solid var(--border);
+  transition: all 0.4s ease;
+  opacity: 0;
+  transform: translateY(30px);
+}
+.value-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.value-card:hover {
+  border-color: var(--text);
+  background: var(--surface);
+}
+.value-icon {
+  font-size: 32px;
+  margin-bottom: 20px;
+  display: block;
+}
+.value-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+.value-card p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ===== CONTACT ===== */
+#contacto {
+  border-top: 1px solid var(--border);
+  padding-bottom: 60px;
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+}
+.contact-info h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.contact-info p {
+  color: var(--text-muted);
+  line-height: 1.7;
+  font-size: 15px;
+  margin-bottom: 32px;
+}
+.contact-detail {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: var(--text);
+  text-decoration: none;
+  transition: opacity 0.3s;
+}
+.contact-detail:hover { opacity: 0.7; }
+.contact-detail .icon {
+  width: 40px; height: 40px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.contact-form input,
+.contact-form textarea {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 16px 20px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: var(--text);
+}
+.contact-form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+.contact-form button {
+  padding: 16px 32px;
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.contact-form button:hover {
+  background: #ccc;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px;
+  text-align: center;
+}
+footer p {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+footer .footer-logo {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+}
+
+/* ===== GLASS DIVIDER ===== */
+.glass-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 968px) {
+  .about-grid,
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .hero-content { padding: 0 40px; }
+  .section { padding: 80px 24px; }
+  .values-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  nav { padding: 16px 20px; }
+  nav.menu-open { mix-blend-mode: normal; }
+  .nav-links {
+    position: fixed;
+    top: 0; right: 0; bottom: 0; left: auto;
+    width: 75vw;
+    max-width: 320px;
+    background: rgba(10,10,10,0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    font-size: 16px;
+    z-index: 1002;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), opacity 0.3s ease;
+    pointer-events: none;
+    border-left: 1px solid var(--border);
+  }
+  .nav-links.open {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+  .menu-toggle { display: block; z-index: 1003; }
+  nav.menu-open .menu-toggle { color: var(--text); }
+  .hero-content { padding: 0 24px; }
+  .hero-logo { max-width: 85vw; }
+  .section { padding: 60px 20px; }
+  .about-stats { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .stat-number { font-size: 36px; }
+  .values-grid { grid-template-columns: 1fr; }
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  .product-card img { height: 400px; }
+  .carousel-section { padding: 60px 20px 80px; }
+  .carousel-3d-wrap { height: 440px; }
+}
+@media (max-width: 480px) {
+  .carousel-3d-wrap { height: 380px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav id="navbar">
+  <a href="#" class="logo"><img src="Logo/LOGO-AWN.png" alt="AWN IMPORTS" style="height:100px;width:auto;display:block"></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#looks">Looks</a></li>
+    <li><a href="#productos">Productos</a></li>
+    <li><a href="#about">Nosotros</a></li>
+    <li><a href="#valores">Valores</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu">&#9776;</button>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-logo-wrap" id="heroLogo">
+      <img src="Logo/LOGO-AWN.png" alt="AWN IMPORTS" class="hero-logo" id="heroLogoImg">
+    </div>
+    <p class="desc">Ropa importada de Estados Unidos con identidad urbana. Cada prenda cuenta una historia de estilo, calidad y autenticidad.</p>
+    <a href="#productos" class="hero-cta">
+      Explorar Colección
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ===== 3D CAROUSEL ===== -->
+<section id="looks" class="carousel-section">
+  <div class="section-header">
+    <p class="section-tag">Looks</p>
+    <h2 class="section-title">Estilo en <span class="light">Movimiento</span></h2>
+  </div>
+  <div class="carousel-3d-wrap">
+    <div class="carousel-3d" id="carousel3d"></div>
+  </div>
+  <div class="carousel-nav" id="carouselDots"></div>
+  <div class="carousel-arrows">
+    <button class="carousel-arrow" id="carouselPrev">&#8592;</button>
+    <button class="carousel-arrow" id="carouselNext">&#8594;</button>
+  </div>
+</section>
+
+<!-- ===== PRODUCTS ===== -->
+<section id="productos" class="section">
+  <div class="section-header">
+    <p class="section-tag">Catálogo</p>
+    <h2 class="section-title">Colección <span class="light">Urbana</span></h2>
+  </div>
+  <div class="products-grid" id="productsGrid"></div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section id="about" class="section">
+  <div class="section-header">
+    <p class="section-tag">Quiénes Somos</p>
+    <h2 class="section-title">AWN <span class="light">IMPORT</span></h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p class="highlight">Nacimos para vestir la ciudad con estilo auténtico.</p>
+      <p>AWN IMPORTS es una marca colombiana de ropa urbana importada directamente desde Estados Unidos. Seleccionamos cuidadosamente cada prenda para ofrecerte calidad, diseño y autenticidad internacional.</p>
+      <p>Trabajamos con proveedores y marcas estadounidenses para traerte lo mejor del streetwear global a precios justos. Cada colección es curada pensando en quienes viven la ciudad con actitud.</p>
+    </div>
+    <div class="about-stats">
+      <div class="stat"><div class="stat-number">50+</div><div class="stat-label">Prendas Vendidas</div></div>
+      <div class="stat"><div class="stat-number">100%</div><div class="stat-label">Calidad Garantizada</div></div>
+      <div class="stat"><div class="stat-number">COL</div><div class="stat-label">Hecho en Colombia</div></div>
+      <div class="stat"><div class="stat-number">2025</div><div class="stat-label">Año de Fundación</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== VALUES ===== -->
+<section id="valores" class="section">
+  <div class="section-header">
+    <p class="section-tag">Nuestra Filosofía</p>
+    <h2 class="section-title">Por Qué <span class="light">Elegirnos</span></h2>
+  </div>
+  <div class="values-grid">
+    <div class="value-card">
+      <span class="value-icon">✦</span>
+      <h3>Calidad Superior</h3>
+      <p>Cada prenda pasa por controles de calidad rigurosos. Seleccionamos los mejores materiales para garantizar durabilidad y confort.</p>
+    </div>
+    <div class="value-card">
+      <span class="value-icon">▲</span>
+      <h3>Diseño Exclusivo</h3>
+      <p>Nuestras colecciones combinan tendencias globales con un estilo único. No solo sigues la moda, la creas.</p>
+    </div>
+    <div class="value-card">
+      <span class="value-icon">●</span>
+      <h3>Precios Justos</h3>
+      <p>Eliminamos intermediarios para ofrecerte el mejor precio sin sacrificar estilo. Moda accesible para todos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section id="contacto" class="section">
+  <div class="section-header">
+    <p class="section-tag">Contacto</p>
+    <h2 class="section-title">Hablemos</h2>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <h3>Conéctate con nosotros</h3>
+      <p>Estamos listos para atenderte. Escríbenos para pedidos, información o simplemente para saludar.</p>
+      <a href="https://wa.me/573209111630" target="_blank" class="contact-detail">
+        <span class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></span>
+        <span>+57 320 911 1630</span>
+      </a>
+      <a href="https://instagram.com/awn_import" target="_blank" class="contact-detail">
+        <span class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></span>
+        <span>@awn_import</span>
+      </a>
+    </div>
+    <form class="contact-form">
+      <input type="text" placeholder="Nombre" required>
+      <input type="email" placeholder="Correo electrónico" required>
+      <input type="text" placeholder="Asunto">
+      <textarea placeholder="Mensaje" required></textarea>
+      <button type="submit">Enviar Mensaje</button>
+    </form>
+  </div>
+</section>
+
+<!-- ===== PRODUCT MODAL ===== -->
+<div class="product-modal" id="productModal">
+  <div class="product-modal-content">
+    <button class="product-modal-close" id="modalClose">&times;</button>
+    <div class="product-modal-image" id="modalImageWrap">
+      <img id="modalImg" src="" alt="">
+      <div class="modal-img-nav" id="modalImgNav"></div>
+    </div>
+    <div class="product-modal-info">
+      <div class="modal-category" id="modalCategory"></div>
+      <div class="modal-name" id="modalName"></div>
+      <div class="modal-price" id="modalPrice"></div>
+      <div class="modal-desc" id="modalDesc"></div>
+      <div class="modal-sizes">
+        <div class="modal-sizes-label">Tallas disponibles</div>
+        <div class="modal-sizes-grid" id="modalSizes"></div>
+      </div>
+      <div class="modal-stock" id="modalStock"></div>
+      <a href="https://wa.me/573209111630" target="_blank" class="modal-cta">Comprar por WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LIGHTBOX ===== -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">&times;</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-logo">AWN IMPORTS</div>
+  <p>&copy; 2026 AWN IMPORTS Colombia &mdash; Todos los derechos reservados</p>
+</footer>
+
+<!-- ===== THREE.JS ===== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+// ===== PRODUCT DATA =====
+let products = [];
+
+async function loadProducts() {
+  try {
+    const res = await fetch('/products.json');
+    if (res.ok) {
+      products = await res.json();
+    }
+  } catch (e) {
+    console.warn('No se pudo cargar products.json');
+  }
+  if (!products.length) {
+    products = getDefaultProducts();
+  }
+  renderProducts();
+}
+
+function getDefaultProducts() {
+  return [
+    { id: 1, name: 'Oversized Hoodie', category: 'Hoodies', price: 189900, original: 249900, images: ['Ropa/product-1.jpeg'], badge: 'Nuevo', sizes: ['S','M','L','XL'], stock: 12, description: 'Hoodie oversized de algodón premium importado de USA.' },
+    { id: 2, name: 'Cargo Pants', category: 'Pantalones', price: 159900, original: 199900, images: ['Ropa/product-2.jpeg'], badge: 'Oferta', sizes: ['28','30','32','34'], stock: 8, description: 'Pantalones cargo importados con corte recto.' },
+    { id: 3, name: 'Street Jacket', category: 'Chaquetas', price: 219900, original: 289900, images: ['Ropa/product-3.jpeg'], badge: 'Popular', sizes: ['S','M','L'], stock: 5, description: 'Chaqueta streetwear importada de USA.' },
+    { id: 4, name: 'Basic Tee', category: 'Camisetas', price: 79900, original: null, images: ['Ropa/product-4.jpeg'], badge: null, sizes: ['S','M','L','XL','XXL'], stock: 20, description: 'Camiseta básica de algodón 100% importada.' }
+  ];
+}
+
+// ===== FORMAT PRICE =====
+function formatCOP(amount) {
+  return '$' + amount.toLocaleString('es-CO') + ' COP';
+}
+
+// ===== RENDER PRODUCTS =====
+function renderProducts() {
+const grid = document.getElementById('productsGrid');
+grid.innerHTML = '';
+products.forEach((p, i) => {
+  const card = document.createElement('div');
+  card.className = 'product-card';
+  card.style.transitionDelay = (i * 0.1) + 's';
+  card.dataset.index = i;
+  const imgs = p.images && p.images.length ? p.images : [p.image || 'Ropa/product-1.jpeg'];
+  card.innerHTML = `
+    <div class="product-card-inner">
+      <img src="${imgs[0]}" alt="${p.name}" loading="lazy">
+      ${p.badge ? `<div class="product-overlay"><span class="product-badge">${p.badge}</span></div>` : ''}
+      <div class="product-info">
+        <div class="product-category">${p.category}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-price">
+          ${p.original ? `<span class="original">${formatCOP(p.original)}</span>` : ''}
+          ${formatCOP(p.price)}
+        </div>
+      </div>
+    </div>`;
+  card.addEventListener('click', () => openModal(p));
+  grid.appendChild(card);
+});
+}
+
+// ===== PRODUCT MODAL =====
+const modal = document.getElementById('productModal');
+const modalImg = document.getElementById('modalImg');
+const modalCategory = document.getElementById('modalCategory');
+const modalName = document.getElementById('modalName');
+const modalPrice = document.getElementById('modalPrice');
+const modalDesc = document.getElementById('modalDesc');
+const modalSizes = document.getElementById('modalSizes');
+const modalStock = document.getElementById('modalStock');
+const modalClose = document.getElementById('modalClose');
+
+function openModal(p) {
+  const imgs = p.images && p.images.length ? p.images : [p.image || 'Ropa/product-1.jpeg'];
+  modalImg.src = imgs[0];
+  modalImg.alt = p.name;
+
+  const nav = document.getElementById('modalImgNav');
+  nav.innerHTML = '';
+  imgs.forEach((src, i) => {
+    const thumb = document.createElement('div');
+    thumb.className = 'modal-img-thumb' + (i === 0 ? ' active' : '');
+    thumb.innerHTML = `<img src="${src}" alt="">`;
+    thumb.addEventListener('click', () => {
+      modalImg.src = src;
+      nav.querySelectorAll('.modal-img-thumb').forEach(t => t.classList.remove('active'));
+      thumb.classList.add('active');
+    });
+    nav.appendChild(thumb);
+  });
+
+  modalCategory.textContent = p.category;
+  modalName.textContent = p.name;
+  modalPrice.innerHTML = p.original
+    ? `<span class="original">${formatCOP(p.original)}</span>${formatCOP(p.price)}`
+    : formatCOP(p.price);
+  modalDesc.textContent = p.description;
+
+  modalSizes.innerHTML = '';
+  p.sizes.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'modal-size-btn';
+    btn.textContent = s;
+    btn.addEventListener('click', () => {
+      modalSizes.querySelectorAll('.modal-size-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+    modalSizes.appendChild(btn);
+  });
+
+  const dotClass = p.stock > 10 ? 'available' : p.stock > 0 ? 'low' : 'empty';
+  const stockText = p.stock > 10 ? 'Disponible' : p.stock > 0 ? `Quedan ${p.stock}` : 'Agotado';
+  modalStock.innerHTML = `<span class="dot ${dotClass}"></span> ${stockText} (${p.stock} unidades)`;
+
+  modal.classList.add('open');
+}
+
+modalClose.addEventListener('click', () => modal.classList.remove('open'));
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) modal.classList.remove('open');
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') modal.classList.remove('open');
+});
+
+// ===== THREE.JS 3D BACKGROUND =====
+(function init3D() {
+  const canvas = document.getElementById('hero-canvas');
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  // Floating rings / torus geometry
+  const group = new THREE.Group();
+
+  const geometries = [
+    { geo: new THREE.TorusGeometry(1.2, 0.03, 16, 60), color: 0xffffff, pos: [-3, 0.5, -5], speed: 0.002 },
+    { geo: new THREE.TorusGeometry(0.9, 0.02, 16, 50), color: 0x888888, pos: [4, -1, -7], speed: -0.003 },
+    { geo: new THREE.TorusKnotGeometry(0.7, 0.25, 64, 8), color: 0x444444, pos: [0, -2, -8], speed: 0.004 },
+    { geo: new THREE.TorusGeometry(1.8, 0.02, 12, 80), color: 0x666666, pos: [-5, -1.5, -10], speed: 0.0015 },
+    { geo: new THREE.TorusGeometry(0.6, 0.015, 12, 30), color: 0xffffff, pos: [5, 2, -6], speed: -0.005 },
+  ];
+
+  geometries.forEach(g => {
+    const mat = new THREE.MeshBasicMaterial({
+      color: g.color,
+      transparent: true,
+      opacity: 0.15 + Math.random() * 0.2,
+      wireframe: false
+    });
+    const mesh = new THREE.Mesh(g.geo, mat);
+    mesh.position.set(g.pos[0], g.pos[1], g.pos[2]);
+    mesh.rotation.x = Math.random() * Math.PI;
+    mesh.rotation.y = Math.random() * Math.PI;
+    mesh.userData = { speed: g.speed, rotX: 0.001 + Math.random() * 0.005, rotY: 0.002 + Math.random() * 0.005 };
+    group.add(mesh);
+  });
+
+  // Logo as 3D floating plane
+  const textureLoader = new THREE.TextureLoader();
+  const logoTex = textureLoader.load('Logo/LOGO-AWN.png');
+  const logoMat = new THREE.SpriteMaterial({
+    map: logoTex,
+    transparent: true,
+    opacity: 0.12,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  });
+  const logoSprite = new THREE.Sprite(logoMat);
+  logoSprite.position.set(0, 0.3, -4);
+  logoSprite.scale.set(3.5, 1.5, 1);
+  group.add(logoSprite);
+
+  // Particles
+  const particleCount = 150;
+  const positions = new Float32Array(particleCount * 3);
+  for (let i = 0; i < particleCount * 3; i++) {
+    positions[i] = (Math.random() - 0.5) * 25;
+  }
+  const particleGeo = new THREE.BufferGeometry();
+  particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  const particleMat = new THREE.PointsMaterial({
+    color: 0xffffff,
+    size: 0.02,
+    transparent: true,
+    opacity: 0.4,
+  });
+  const particles = new THREE.Points(particleGeo, particleMat);
+  group.add(particles);
+
+  scene.add(group);
+
+  camera.position.z = 3;
+
+  let mouseX = 0, mouseY = 0;
+  let targetX = 0, targetY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+    mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+  });
+
+  const clock = new THREE.Clock();
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+
+    targetX += (mouseX - targetX) * 0.05;
+    targetY += (mouseY - targetY) * 0.05;
+
+    group.rotation.x = targetY * 0.1 + Math.sin(t * 0.1) * 0.03;
+    group.rotation.y = targetX * 0.15 + Math.sin(t * 0.08) * 0.05;
+
+    group.children.forEach(child => {
+      if (child.isMesh) {
+        child.rotation.x += child.userData.rotX;
+        child.rotation.y += child.userData.rotY;
+      }
+    });
+
+    particles.rotation.y = t * 0.01;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
+
+// ===== 3D LOGO PARALLAX =====
+(function initLogo3D() {
+  const logo = document.getElementById('heroLogo');
+  const img = document.getElementById('heroLogoImg');
+  if (!logo) return;
+
+  let mx = 0, my = 0;
+  let tx = 0, ty = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mx = (e.clientX / window.innerWidth) * 2 - 1;
+    my = -(e.clientY / window.innerHeight) * 2 + 1;
+  });
+
+  function animateLogo() {
+    requestAnimationFrame(animateLogo);
+    tx += (mx - tx) * 0.05;
+    ty += (my - ty) * 0.05;
+
+    const rotY = tx * 8;
+    const rotX = ty * 6;
+    const translateZ = 20 - Math.abs(tx * ty) * 15;
+
+    logo.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(${translateZ}px)`;
+
+    // Subtle image brightness shift based on angle
+    const brightness = 1 + Math.abs(tx * ty) * 0.15;
+    img.style.filter = `brightness(${brightness}) drop-shadow(0 0 ${30 + Math.abs(tx * ty) * 40}px rgba(255,255,255,${0.06 + Math.abs(tx * ty) * 0.1}))`;
+  }
+  animateLogo();
+})();
+
+// ===== 3D TILT ON PRODUCT CARDS =====
+document.querySelectorAll('.product-card').forEach(card => {
+  let tiltTimer;
+  card.addEventListener('mousemove', (e) => {
+    clearTimeout(tiltTimer);
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / centerY * -8;
+    const rotateY = (x - centerX) / centerX * 8;
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+    card.style.transition = 'transform 0.1s ease';
+  });
+  card.addEventListener('mouseleave', () => {
+    tiltTimer = setTimeout(() => {
+      card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+      card.style.transition = 'transform 0.5s ease';
+    }, 100);
+  });
+});
+
+// ===== SCROLL ANIMATIONS =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      if (entry.target.classList.contains('section-header')) {
+        // Animate children too
+      }
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.section-header, .stat, .value-card, .product-card, .carousel-section .section-header').forEach(el => {
+  observer.observe(el);
+});
+
+// ===== NAVBAR SCROLL =====
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 60) {
+    navbar.classList.add('scrolled');
+  } else {
+    navbar.classList.remove('scrolled');
+  }
+});
+
+// ===== MOBILE MENU =====
+const menuToggle = document.getElementById('menuToggle');
+const navLinks = document.getElementById('navLinks');
+const navBar = document.getElementById('navbar');
+
+menuToggle.addEventListener('click', () => {
+  const isOpen = navLinks.classList.toggle('open');
+  navBar.classList.toggle('menu-open', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+  menuToggle.innerHTML = isOpen ? '&#10005;' : '&#9776;';
+});
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    navBar.classList.remove('menu-open');
+    document.body.style.overflow = '';
+    menuToggle.innerHTML = '&#9776;';
+  });
+});
+
+// ===== 3D CAROUSEL =====
+(function init3DCarousel() {
+  const images = [
+    'Muestras/muestra-1.jpeg',
+    'Muestras/muestra-2.jpeg',
+    'Muestras/muestra-3.jpeg',
+    'Muestras/muestra-4.jpeg',
+    'Muestras/muestra-5.jpeg',
+  ];
+  const container = document.getElementById('carousel3d');
+  const dotsContainer = document.getElementById('carouselDots');
+  if (!container) return;
+
+  const radius = 500;
+  const count = images.length;
+  let current = 0;
+  let autoTimer;
+  let isDragging = false;
+  let startX = 0;
+  let dragAngle = 0;
+  let currentAngle = 0;
+  let targetAngle = 0;
+
+  images.forEach((src, i) => {
+    const item = document.createElement('div');
+    item.className = 'carousel-3d-item';
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = `Look ${i + 1}`;
+    img.loading = 'lazy';
+    item.appendChild(img);
+    container.appendChild(item);
+
+    const dot = document.createElement('button');
+    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', `Ir a look ${i + 1}`);
+    dot.addEventListener('click', () => goTo(i));
+    dotsContainer.appendChild(dot);
+  });
+
+  const items = container.querySelectorAll('.carousel-3d-item');
+
+  function goTo(index) {
+    current = ((index % count) + count) % count;
+    targetAngle = -(360 / count) * current;
+    update();
+    resetAuto();
+  }
+
+  function update(immediate) {
+    const step = 360 / count;
+    const dots = dotsContainer.querySelectorAll('.carousel-dot');
+
+    items.forEach((item, i) => {
+      const angle = (i * step) + targetAngle;
+      const rad = (angle * Math.PI) / 180;
+      const x = Math.sin(rad) * radius;
+      const z = Math.cos(rad) * radius - radius;
+      const isActive = i === current;
+
+      const scale = isActive ? 1 : 0.5;
+      const opacity = isActive ? 1 : 0.2;
+      const zOffset = isActive ? 60 : -40;
+
+      item.style.transform = `translateX(${x}px) translateZ(${z + zOffset}px) rotateY(${-angle}deg) scale(${scale})`;
+      item.style.opacity = opacity;
+      item.style.zIndex = isActive ? 10 : (z > -200 ? 5 : 0);
+      item.style.filter = isActive ? 'brightness(1) contrast(1)' : 'brightness(0.35) contrast(0.85) blur(0.5px)';
+
+      item.classList.toggle('active', isActive);
+      dots[i].classList.toggle('active', i === current);
+    });
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(next, 4000);
+  }
+
+  // Drag support
+  let didDrag = false;
+
+  container.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    didDrag = false;
+    startX = e.clientX;
+    dragAngle = targetAngle;
+    container.style.cursor = 'grabbing';
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > 5) didDrag = true;
+    const newAngle = dragAngle + (dx / radius) * (180 / Math.PI);
+    targetAngle = newAngle;
+    update(true);
+  });
+  document.addEventListener('mouseup', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    container.style.cursor = 'grab';
+    if (didDrag) {
+      const step = 360 / count;
+      const closest = Math.round(-targetAngle / step);
+      goTo(closest);
+    }
+  });
+
+  // Touch
+  container.addEventListener('touchstart', (e) => {
+    isDragging = true;
+    didDrag = false;
+    startX = e.touches[0].clientX;
+    dragAngle = targetAngle;
+  }, { passive: true });
+  container.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    const dx = e.touches[0].clientX - startX;
+    if (Math.abs(dx) > 5) didDrag = true;
+    targetAngle = dragAngle + (dx / radius) * (180 / Math.PI);
+    update(true);
+  }, { passive: true });
+  container.addEventListener('touchend', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    if (didDrag) {
+      const step = 360 / count;
+      const closest = Math.round(-targetAngle / step);
+      goTo(closest);
+    }
+  });
+
+  document.getElementById('carouselNext').addEventListener('click', next);
+  document.getElementById('carouselPrev').addEventListener('click', prev);
+
+  // Click to open lightbox
+  items.forEach((item, i) => {
+    item.addEventListener('click', (e) => {
+      if (didDrag) return;
+      if (i !== current) { goTo(i); return; }
+      const lb = document.getElementById('lightbox');
+      document.getElementById('lightboxImg').src = images[i];
+      lb.classList.add('open');
+    });
+  });
+  document.getElementById('lightboxClose').addEventListener('click', () => {
+    document.getElementById('lightbox').classList.remove('open');
+  });
+  document.getElementById('lightbox').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) {
+      document.getElementById('lightbox').classList.remove('open');
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('open');
+  });
+
+  // Responsive radius
+  function resizeCarousel() {
+    const w = window.innerWidth;
+    const newRadius = w < 768 ? 240 : w < 1024 ? 360 : 480;
+    if (newRadius !== radius) {}
+    const itemW = w < 768 ? 240 : 380;
+    const itemH = w < 768 ? 330 : 520;
+    items.forEach(item => {
+      item.style.width = itemW + 'px';
+      item.style.height = itemH + 'px';
+      item.style.marginLeft = -(itemW / 2) + 'px';
+      item.style.marginTop = -(itemH / 2) + 'px';
+    });
+    update(true);
+  }
+
+  container.style.cursor = 'grab';
+  update();
+  resetAuto();
+  window.addEventListener('resize', resizeCarousel);
+})();
+
+// ===== INIT =====
+loadProducts();
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.querySelectorAll('.product-card').forEach((card, i) => {
+      setTimeout(() => card.classList.add('visible'), 200 + i * 100);
+    });
+  }, 300);
+});
+</script>
+</body>
+</html>

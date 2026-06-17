@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — AWN IMPORTS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0a0a0a;
+  color: #f5f5f5;
+  padding: 40px;
+}
+h1 { font-size: 28px; font-weight: 900; letter-spacing: -1px; margin-bottom: 8px; }
+.sub { color: #888; font-size: 14px; margin-bottom: 40px; }
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.header-actions { display: flex; gap: 12px; }
+.btn {
+  padding: 12px 24px;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.btn-primary { background: #f5f5f5; color: #0a0a0a; }
+.btn-primary:hover { background: #ccc; }
+.btn-outline { background: transparent; border: 1px solid #222; color: #f5f5f5; }
+.btn-outline:hover { border-color: #f5f5f5; }
+.btn-danger { background: #ef4444; color: #fff; }
+.btn-danger:hover { background: #dc2626; }
+.btn-sm { padding: 8px 16px; font-size: 11px; }
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+.product-card {
+  background: #111;
+  border: 1px solid #222;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+.product-card:hover { border-color: #444; }
+.product-card-header {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #222;
+}
+.product-card-header .name { font-size: 15px; font-weight: 700; }
+.product-card-header .id { font-size: 11px; color: #666; }
+.product-card-body { padding: 20px; }
+.form-group { margin-bottom: 14px; }
+.form-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 6px;
+}
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px 14px;
+  background: #1a1a1a;
+  border: 1px solid #222;
+  color: #f5f5f5;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus { border-color: #f5f5f5; }
+.form-group textarea { resize: vertical; min-height: 70px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.sizes-input {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.sizes-input input {
+  width: 50px;
+  text-align: center;
+  padding: 8px;
+  background: #1a1a1a;
+  border: 1px solid #222;
+  color: #f5f5f5;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  outline: none;
+}
+.sizes-input input:focus { border-color: #f5f5f5; }
+.images-list { display: flex; flex-direction: column; gap: 6px; }
+.image-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.image-row input { flex: 1; }
+.image-row .preview {
+  width: 40px; height: 40px;
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #1a1a1a;
+}
+.image-row .preview img { width: 100%; height: 100%; object-fit: cover; }
+.image-row .rm-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+  flex-shrink: 0;
+}
+.add-btn {
+  background: none;
+  border: 1px dashed #333;
+  color: #888;
+  padding: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+  margin-top: 4px;
+}
+.add-btn:hover { border-color: #f5f5f5; color: #f5f5f5; }
+.product-card-actions {
+  display: flex;
+  gap: 8px;
+  padding: 16px 20px;
+  border-top: 1px solid #222;
+}
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #22c55e;
+  color: #000;
+  padding: 14px 24px;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+  z-index: 100;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.error { background: #ef4444; color: #fff; }
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: #666;
+}
+.empty-state p { font-size: 14px; margin-bottom: 16px; }
+@media (max-width: 768px) {
+  body { padding: 20px; }
+  .products-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="header-bar">
+  <div>
+    <h1>Panel de Administración</h1>
+    <p class="sub">Gestioná tus productos. Los cambios se guardan en products.json y se reflejan automáticamente en la tienda.</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline" onclick="addProduct()">+ Nuevo Producto</button>
+    <button class="btn btn-primary" onclick="saveAll()">Guardar Todo</button>
+  </div>
+</div>
+
+<div id="productsContainer" class="products-grid"></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let products = [];
+
+async function load() {
+  try {
+    const res = await fetch('/api/products');
+    if (res.ok) products = await res.json();
+  } catch (e) {}
+  if (!products.length) {
+    products = [
+      { id: 1, name: 'Oversized Hoodie', category: 'Hoodies', price: 189900, original: 249900, images: ['Ropa/product-1.jpeg'], badge: 'Nuevo', sizes: ['S','M','L','XL'], stock: 12, description: 'Hoodie oversized de algodón premium importado de USA.' },
+      { id: 2, name: 'Cargo Pants', category: 'Pantalones', price: 159900, original: 199900, images: ['Ropa/product-2.jpeg'], badge: 'Oferta', sizes: ['28','30','32','34'], stock: 8, description: 'Pantalones cargo importados con corte recto.' },
+      { id: 3, name: 'Street Jacket', category: 'Chaquetas', price: 219900, original: 289900, images: ['Ropa/product-3.jpeg'], badge: 'Popular', sizes: ['S','M','L'], stock: 5, description: 'Chaqueta streetwear importada de USA.' },
+      { id: 4, name: 'Basic Tee', category: 'Camisetas', price: 79900, original: null, images: ['Ropa/product-4.jpeg'], badge: null, sizes: ['S','M','L','XL','XXL'], stock: 20, description: 'Camiseta básica de algodón 100% importada.' }
+    ];
+  }
+  render();
+}
+
+function render() {
+  const container = document.getElementById('productsContainer');
+  container.innerHTML = '';
+  products.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.dataset.index = i;
+    card.innerHTML = `
+      <div class="product-card-header">
+        <div>
+          <div class="name">${p.name || 'Sin nombre'}</div>
+          <div class="id">ID: ${p.id} — ${p.category || 'Sin categoría'}</div>
+        </div>
+        <button class="btn btn-sm btn-danger" onclick="removeProduct(${i})">Eliminar</button>
+      </div>
+      <div class="product-card-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" value="${escapeHtml(p.name || '')}" onchange="updateProduct(${i},'name',this.value)">
+          </div>
+          <div class="form-group">
+            <label>Categoría</label>
+            <input type="text" value="${escapeHtml(p.category || '')}" onchange="updateProduct(${i},'category',this.value)">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Precio (COP)</label>
+            <input type="number" value="${p.price || 0}" onchange="updateProduct(${i},'price',Number(this.value))">
+          </div>
+          <div class="form-group">
+            <label>Precio Original (dejar en 0 si no aplica)</label>
+            <input type="number" value="${p.original || 0}" onchange="updateProduct(${i},'original',Number(this.value)||null)" placeholder="0 = sin descuento">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Stock</label>
+            <input type="number" value="${p.stock || 0}" onchange="updateProduct(${i},'stock',Number(this.value))">
+          </div>
+          <div class="form-group">
+            <label>Badge (ej: Nuevo, Oferta)</label>
+            <input type="text" value="${escapeHtml(p.badge || '')}" onchange="updateProduct(${i},'badge',this.value||null)" placeholder="Dejar vacío si no aplica">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea onchange="updateProduct(${i},'description',this.value)">${escapeHtml(p.description || '')}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Tallas (separadas por coma)</label>
+          <input type="text" value="${(p.sizes||[]).join(', ')}" onchange="updateProduct(${i},'sizes',this.value.split(',').map(s=>s.trim()).filter(Boolean))" placeholder="S, M, L, XL">
+        </div>
+        <div class="form-group">
+          <label>Imágenes (rutas, una por línea)</label>
+          <div class="images-list" id="images-${i}">
+            ${(p.images||['']).map((img, j) => `
+              <div class="image-row">
+                <div class="preview"><img src="${escapeHtml(img)}" onerror="this.parentElement.innerHTML=''"></div>
+                <input type="text" value="${escapeHtml(img)}" onchange="updateImage(${i},${j},this.value)">
+                <button class="rm-btn" onclick="removeImage(${i},${j})">&times;</button>
+              </div>
+            `).join('')}
+          </div>
+          <button class="add-btn" onclick="addImage(${i})">+ Agregar imagen</button>
+        </div>
+      </div>
+      <div class="product-card-actions">
+        <a href="/" target="_blank" class="btn btn-outline btn-sm">Ver tienda</a>
+        <button class="btn btn-primary btn-sm" onclick="saveAll()">Guardar Todo</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function updateProduct(i, key, value) {
+  products[i][key] = value;
+}
+
+function updateImage(i, j, value) {
+  products[i].images[j] = value;
+  render();
+}
+
+function removeImage(i, j) {
+  products[i].images.splice(j, 1);
+  render();
+}
+
+function addImage(i) {
+  if (!products[i].images) products[i].images = [];
+  products[i].images.push('');
+  render();
+}
+
+function removeProduct(i) {
+  if (!confirm('¿Eliminar este producto?')) return;
+  products.splice(i, 1);
+  render();
+}
+
+function addProduct() {
+  const maxId = products.reduce((m, p) => Math.max(m, p.id || 0), 0);
+  products.push({
+    id: maxId + 1,
+    name: 'Nuevo Producto',
+    category: 'Categoría',
+    price: 0,
+    original: null,
+    images: [''],
+    badge: null,
+    sizes: ['S', 'M', 'L'],
+    stock: 0,
+    description: 'Descripción del producto.'
+  });
+  render();
+  document.querySelector('.product-card:last-child').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function saveAll() {
+  // Clean up empty images
+  products.forEach(p => {
+    if (p.images) p.images = p.images.filter(img => img && img.trim());
+    if (!p.images || !p.images.length) p.images = [''];
+    if (!p.original) p.original = null;
+    if (!p.badge) p.badge = null;
+  });
+
+  try {
+    const res = await fetch('/api/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(products)
+    });
+    if (res.ok) {
+      showToast('Productos guardados correctamente');
+    } else {
+      showToast('Error al guardar', true);
+    }
+  } catch (e) {
+    showToast('Error de conexión con el servidor', true);
+  }
+}
+
+function showToast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+load();
+</script>
+</body>
+</html>
