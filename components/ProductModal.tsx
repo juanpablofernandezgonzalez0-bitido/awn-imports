@@ -5,7 +5,7 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, ArrowUpRight, ChevronLeft, ChevronRight, ShoppingBag, Check } from "lucide-react";
 import type { Product } from "@/lib/products";
-import { formatCOP, waLink } from "@/lib/site";
+import { formatCOP, formatPrice, waLink } from "@/lib/site";
 import { useCart } from "@/lib/cart";
 
 function getAllImages(product: Product): string[] {
@@ -93,9 +93,9 @@ export default function ProductModal({
   };
 
   const message = product
-    ? `Hola AWN IMPORT 👋, me interesa la prenda "${product.name}" (${formatCOP(
-        product.price
-      )})${size ? ` en talla ${size}` : ""}.`
+    ? `Hola AWN IMPORT 👋, me interesa la prenda "${product.name}"${
+        product.price > 0 ? ` (${formatCOP(product.price)})` : ""
+      }${size ? ` en talla ${size}` : ""}.`
     : "";
 
   const handleAddToCart = () => {
@@ -297,8 +297,8 @@ export default function ProductModal({
                       </div>
                     </div>
                   ) : (
-                    <p className="mt-1.5 font-display text-2xl font-bold tabular-nums sm:text-3xl lg:text-4xl">
-                      {formatCOP(product.price)}
+                    <p className={`mt-1.5 font-display font-bold tabular-nums ${product.price > 0 ? "text-2xl sm:text-3xl lg:text-4xl" : "text-lg text-neutral-500 sm:text-xl lg:text-2xl"}`}>
+                      {formatPrice(product.price)}
                     </p>
                   )}
 

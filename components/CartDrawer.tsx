@@ -5,7 +5,7 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/lib/cart";
-import { formatCOP, waLink } from "@/lib/site";
+import { formatCOP, formatPrice, waLink } from "@/lib/site";
 
 export default function CartDrawer({ open, onClose, site }: { open: boolean; onClose: () => void; site: any }) {
   const { items, removeItem, updateQuantity, clearCart, totalItems, totalPrice } = useCart();
@@ -22,14 +22,17 @@ export default function CartDrawer({ open, onClose, site }: { open: boolean; onC
     }
   }, [open, onClose]);
 
+  const hasUnpriced = items.some((i) => i.product.price <= 0);
+  const totalLabel = totalPrice > 0 ? formatCOP(totalPrice) : "Por confirmar";
+
   const buildWhatsAppMessage = () => {
     if (items.length === 0) return "";
     const lines = items.map((i) => {
       const sizeText = i.size ? ` (Talla ${i.size})` : "";
-      return `- ${i.product.name}${sizeText} x${i.quantity} — ${formatCOP(i.product.price * i.quantity)}`;
+      return `- ${i.product.name}${sizeText} x${i.quantity} — ${formatPrice(i.product.price * i.quantity)}`;
     });
-    const total = formatCOP(totalPrice);
-    return `Hola AWN IMPORT 👋, quiero hacer un pedido:\n\n${lines.join("\n")}\n\nTotal: ${total}`;
+    const note = hasUnpriced ? " (algunas prendas con precio por confirmar)" : "";
+    return `Hola AWN IMPORT 👋, quiero hacer un pedido:\n\n${lines.join("\n")}\n\nTotal: ${totalLabel}${note}`;
   };
 
   return (
@@ -43,6 +46,7 @@ export default function CartDrawer({ open, onClose, site }: { open: boolean; onC
         >
           <motion.button
             onClick={onClose}
+            aria-label="Cerrar carrito"
             className="absolute inset-0 bg-neutral-900/50 backdrop-blur-sm"
           />
 
@@ -59,6 +63,7 @@ export default function CartDrawer({ open, onClose, site }: { open: boolean; onC
               </h2>
               <button
                 onClick={onClose}
+                aria-label="Cerrar carrito"
                 className="flex h-9 w-9 items-center justify-center rounded-full text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-900"
               >
                 <X size={18} />
@@ -70,7 +75,7 @@ export default function CartDrawer({ open, onClose, site }: { open: boolean; onC
                 <div className="flex flex-col items-center justify-center gap-3 py-16 text-neutral-400">
                   <ShoppingBag size={40} strokeWidth={1.5} />
                   <p className="text-sm font-bold uppercase">Tu carrito está vacío</p>
-                  <p className="text-xs">Agregá prendas desde el catálogo</p>
+                  <p className="text-xs">Agrega prendas desde el catálogo</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -95,7 +100,7 @@ export default function CartDrawer({ open, onClose, site }: { open: boolean; onC
                           {item.size && (
                             <p className="text-[11px] text-neutral-500">Talla: {item.size}</p>
                           )}
-                          <p className="text-sm font-bold">{formatCOP(item.product.price)}</p>
+                          <p className="text-sm font-bold">{formatPrice(item.product.price)}</p>
                         </div>
 
                         <div className="flex items-center justify-between">
@@ -133,8 +138,13 @@ export default function CartDrawer({ open, onClose, site }: { open: boolean; onC
               <div className="border-t border-neutral-200 px-6 py-5 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-bold uppercase text-neutral-500">Total</span>
-                  <span className="font-display text-xl font-bold">{formatCOP(totalPrice)}</span>
+                  <span className="font-display text-xl font-bold">{totalLabel}</span>
                 </div>
+                {hasUnpriced && (
+                  <p className="text-[11px] leading-relaxed text-neutral-400">
+                    Algunas prendas tienen precio por confirmar. Te lo confirmamos por WhatsApp.
+                  </p>
+                )}
 
                 <a
                   href={waLink(site, buildWhatsAppMessage())}

@@ -6,6 +6,8 @@ import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion"
 import { Menu, X, Search, ShoppingBag } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import CartDrawer from "./CartDrawer";
+import { OPEN_SEARCH_EVENT } from "./Catalog";
+import type { SiteConfig } from "@/lib/site";
 
 const links = [
   { label: "Catálogo", href: "#catalogo" },
@@ -13,7 +15,7 @@ const links = [
   { label: "Contacto", href: "#contacto" },
 ];
 
-export default function Header({ site: serverSite }: { site: any }) {
+export default function Header({ site }: { site: SiteConfig }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
@@ -30,13 +32,6 @@ export default function Header({ site: serverSite }: { site: any }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    fetch("/api/site").then((r) => r.json()).then((s) => {
-      if (s && s.brand) setSite(s);
-    }).catch(() => {});
-  }, []);
-
-  const [site, setSite] = useState(serverSite);
 
   return (
     <motion.header
@@ -69,7 +64,7 @@ export default function Header({ site: serverSite }: { site: any }) {
         />
 
         <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4 lg:px-8">
-          <a href="#catalogo" className="group flex shrink-0 items-center gap-2.5">
+          <a href="#inicio" aria-label="AWN IMPORT, ir al inicio" className="group flex shrink-0 items-center gap-2.5">
             <div className="relative">
               <div className="absolute -inset-1 rounded-xl bg-neutral-900/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               <Image
@@ -100,13 +95,14 @@ export default function Header({ site: serverSite }: { site: any }) {
 
           <div className="flex items-center gap-1 sm:gap-2">
             <button
-              aria-label="Buscar"
+              aria-label="Buscar prendas"
+              onClick={() => window.dispatchEvent(new Event(OPEN_SEARCH_EVENT))}
               className="hidden h-10 w-10 items-center justify-center rounded-xl text-neutral-400 transition-all duration-300 hover:bg-neutral-100 hover:text-neutral-900 sm:flex"
             >
               <Search size={17} />
             </button>
             <button
-              aria-label="Carrito"
+              aria-label={totalItems > 0 ? `Carrito, ${totalItems} prendas` : "Carrito"}
               onClick={() => setCartOpen(true)}
               className="relative flex h-10 w-10 items-center justify-center rounded-xl text-neutral-400 transition-all duration-300 hover:bg-neutral-100 hover:text-neutral-900"
             >
@@ -131,7 +127,8 @@ export default function Header({ site: serverSite }: { site: any }) {
             <button
               onClick={() => setOpen((v) => !v)}
               className="rounded-xl p-2.5 text-neutral-900 transition-colors duration-300 hover:bg-neutral-100 lg:hidden"
-              aria-label="Menú"
+              aria-label={open ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={open}
             >
               {open ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -175,7 +172,7 @@ export default function Header({ site: serverSite }: { site: any }) {
                     onClick={() => setOpen(false)}
                     className="block rounded-full bg-neutral-900 px-4 py-3 text-center text-sm font-bold uppercase tracking-wider text-white transition-all duration-300 hover:bg-neutral-800"
                   >
-                    Ver catálogo
+                    {site.ctaLabel}
                   </a>
                 </motion.li>
               </ul>
@@ -183,7 +180,7 @@ export default function Header({ site: serverSite }: { site: any }) {
           )}
         </AnimatePresence>
       </motion.div>
-      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} site={serverSite} />
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} site={site} />
     </motion.header>
   );
 }

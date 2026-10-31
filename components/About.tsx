@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
+import type { SiteConfig } from "@/lib/site";
 import { Truck, ShieldCheck, BadgeCheck, RefreshCcw, type LucideIcon } from "lucide-react";
 
 const iconMap: Record<string, LucideIcon> = {
@@ -11,14 +11,7 @@ const iconMap: Record<string, LucideIcon> = {
   refresh: RefreshCcw,
 };
 
-export default function About({ site: serverSite }: { site: any }) {
-  const [site, setSite] = useState(serverSite);
-
-  useEffect(() => {
-    fetch("/api/site").then((r) => r.json()).then((s) => {
-      if (s && s.brand) setSite(s);
-    }).catch(() => {});
-  }, []);
+export default function About({ site }: { site: SiteConfig }) {
 
   return (
     <section id="nosotros" className="relative overflow-hidden bg-neutral-950 py-20 sm:py-28 lg:py-36">
@@ -53,7 +46,7 @@ export default function About({ site: serverSite }: { site: any }) {
         </div>
 
         <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {(site.features ?? []).map((feature: any, i: number) => {
+          {(site.features ?? []).map((feature, i) => {
             const Icon = iconMap[feature.icon] ?? Truck;
             return (
               <motion.div

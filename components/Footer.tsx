@@ -1,19 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Instagram, Mail, MessageCircle, Music2 } from "lucide-react";
-import { waLink } from "@/lib/site";
+import { waLink, type SiteConfig } from "@/lib/site";
 
-export default function Footer({ site: serverSite }: { site: any }) {
-  const [site, setSite] = useState(serverSite);
-
-  useEffect(() => {
-    fetch("/api/site").then((r) => r.json()).then((s) => {
-      if (s && s.brand) setSite(s);
-    }).catch(() => {});
-  }, []);
+export default function Footer({ site }: { site: SiteConfig }) {
 
   const socials = [
     { icon: Instagram, label: "Instagram", href: `https://instagram.com/${site.instagram}` },
@@ -35,7 +27,7 @@ export default function Footer({ site: serverSite }: { site: any }) {
           className="flex flex-col items-start justify-between gap-12 lg:flex-row lg:items-center"
         >
           <div>
-            <a href="#catalogo" className="group inline-flex items-center gap-3">
+            <a href="#inicio" className="group inline-flex items-center gap-3">
               <div className="relative">
                 <div className="absolute -inset-2 rounded-2xl bg-white/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <Image
@@ -87,7 +79,7 @@ export default function Footer({ site: serverSite }: { site: any }) {
             &copy; {new Date().getFullYear()} {site.name}. Todos los derechos reservados.
           </p>
           <p className="text-[10px] uppercase tracking-[0.3em] text-neutral-700">
-            Moda urbana premium
+            {site.tagline}
           </p>
         </motion.div>
       </div>

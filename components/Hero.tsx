@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
@@ -32,8 +32,8 @@ const fadeUp = {
   }),
 };
 
-export default function Hero({ site: serverSite }: { site: SiteConfig }) {
-  const [site, setSite] = useState(serverSite);
+export default function Hero({ site }: { site: SiteConfig }) {
+  const words = (text: string) => text.split(/\s+/).filter(Boolean);
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -47,11 +47,6 @@ export default function Hero({ site: serverSite }: { site: SiteConfig }) {
   const smoothYLogo = useSpring(yLogo, { stiffness: 50, damping: 20 });
   const smoothScale = useSpring(scale, { stiffness: 50, damping: 20 });
 
-  useEffect(() => {
-    fetch("/api/site").then((r) => r.json()).then((s) => {
-      if (s && s.brand) setSite(s);
-    }).catch(() => {});
-  }, []);
 
   return (
     <section
@@ -87,7 +82,7 @@ export default function Hero({ site: serverSite }: { site: SiteConfig }) {
           />
 
           <h1 className="font-display text-4xl font-bold uppercase leading-[0.92] tracking-tight sm:text-6xl lg:text-7xl xl:text-8xl">
-            {site.heroTitle.split(" ").map((word, i) => (
+            {words(site.heroTitle).map((word, i) => (
               <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
                 <motion.span
                   custom={i}
@@ -102,7 +97,7 @@ export default function Hero({ site: serverSite }: { site: SiteConfig }) {
               </span>
             ))}
             <br />
-            {site.heroLine2.split(" ").map((word, i) => (
+            {words(site.heroLine2).map((word, i) => (
               <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
                 <motion.span
                   custom={i + 3}

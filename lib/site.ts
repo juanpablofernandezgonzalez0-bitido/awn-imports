@@ -55,9 +55,18 @@ export const site: SiteConfig = {
   ],
 };
 
+/**
+ * wa.me requiere el número en formato internacional (solo dígitos).
+ * Si el número guardado es un celular colombiano de 10 dígitos, se antepone 57.
+ */
+export function normalizePhone(raw: string) {
+  const digits = (raw ?? "").replace(/\D/g, "");
+  return digits.length === 10 && digits.startsWith("3") ? `57${digits}` : digits;
+}
+
 export function waLink(cfg: SiteConfig, message?: string) {
   const text = encodeURIComponent(message ?? cfg.whatsappMessage);
-  return `https://wa.me/${cfg.whatsapp}?text=${text}`;
+  return `https://wa.me/${normalizePhone(cfg.whatsapp)}?text=${text}`;
 }
 
 const copFormatter = new Intl.NumberFormat("es-CO", {
@@ -68,4 +77,9 @@ const copFormatter = new Intl.NumberFormat("es-CO", {
 
 export function formatCOP(amount: number) {
   return copFormatter.format(amount);
+}
+
+/** Precio visible al cliente: un precio en 0 significa "a consultar", nunca "$ 0". */
+export function formatPrice(amount: number) {
+  return amount > 0 ? formatCOP(amount) : "Consultar precio";
 }

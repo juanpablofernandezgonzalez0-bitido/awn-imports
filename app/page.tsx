@@ -5,6 +5,7 @@ import Marquee from "@/components/Marquee";
 import Catalog from "@/components/Catalog";
 import About from "@/components/About";
 import Footer from "@/components/Footer";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,7 @@ export default async function Home() {
       <Catalog products={products} site={site} />
       <About site={site} />
       <Footer site={site} />
+      <WhatsAppButton site={site} />
     </main>
   );
 }

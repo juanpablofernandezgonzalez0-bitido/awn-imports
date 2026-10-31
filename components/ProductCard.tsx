@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Camera } from "lucide-react";
 import type { Product } from "@/lib/products";
-import { formatCOP } from "@/lib/site";
+import { formatCOP, formatPrice } from "@/lib/site";
 
 function getAllImages(product: Product): string[] {
   if (product.images && product.images.length > 0) return product.images;
@@ -149,8 +149,8 @@ export default function ProductCard({
               <span className="font-display text-[11px] font-bold tabular-nums text-red-600 sm:text-sm lg:text-base">{formatCOP(product.price)}</span>
             </div>
           ) : (
-            <p className={`font-display text-[11px] font-bold tabular-nums sm:text-sm lg:text-base ${product.outOfStock ? "text-neutral-400" : "text-neutral-900"}`}>
-              {formatCOP(product.price)}
+            <p className={`font-display text-[11px] font-bold tabular-nums sm:text-sm lg:text-base ${product.outOfStock || product.price <= 0 ? "text-neutral-400" : "text-neutral-900"}`}>
+              {formatPrice(product.price)}
             </p>
           )}
         </div>
