@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#e9e9e7" />
+  <link
+    rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23171716'/%3E%3Ctext x='16' y='22' font-family='Helvetica, Arial' font-size='13' letter-spacing='1' fill='%23e9e9e7' text-anchor='middle'%3EU%3C/text%3E%3C/svg%3E"
+  />
+  <title>UNKNOWN — Showroom</title>
+  <meta
+    name="description"
+    content="UNKNOWN. An anonymous uniform. Hoodies, tees and jackets, cut for the everyday. Lagos / Worldwide."
+  />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#heroView">SKIP TO SHOWROOM</a>
+
+  <div class="app" id="app">
+    <!-- ───────────────────────── HEADER ───────────────────────── -->
+    <header class="site-header">
+      <button class="nav-btn header-left" id="menuBtn" aria-label="Open menu" aria-haspopup="dialog">
+        MENU
+      </button>
+
+      <button class="wordmark" id="homeBtn" aria-label="UNKNOWN — back to showroom">UNKNOWN</button>
+
+      <nav class="header-nav" aria-label="Store controls">
+        <button class="nav-btn" id="searchBtn" aria-label="Search pieces" aria-haspopup="dialog">SEARCH</button>
+        <button class="nav-btn" id="cartBtn" aria-label="Open cart, 0 items" aria-expanded="false">
+          CART <span id="cartCount" aria-hidden="true">(0)</span>
+        </button>
+        <button class="nav-btn" id="currencyBtn" aria-label="Change currency, currently NGN">NGN</button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- ───────────────────────── HERO / SHOWROOM ───────────────────────── -->
+      <section class="view hero is-active" id="heroView" aria-label="Showroom — pieces hanging on a rail">
+        <span class="hero-meta hero-meta--left" aria-hidden="true">SS26 — DROP 001</span>
+        <span class="hero-meta hero-meta--right" aria-hidden="true">LAGOS / WORLDWIDE</span>
+
+        <div class="hero-stage">
+          <div class="rail" aria-hidden="true"></div>
+          <div class="rack-wrap">
+            <div class="rack" id="rack" role="list" aria-label="Pieces"></div>
+          </div>
+        </div>
+
+        <p class="hero-hint" aria-hidden="true">SELECT A PIECE — OR SCROLL TO ZOOM</p>
+        <div class="hero-fade" aria-hidden="true"></div>
+      </section>
+
+      <!-- ───────────────────────── PRODUCT VIEW ───────────────────────── -->
+      <section class="view product-view" id="productView" aria-label="Piece viewer" aria-hidden="true" inert>
+        <div class="product-scroll" id="productScroll">
+          <div class="stage" id="stage">
+            <span class="piece-index" id="pieceIndex" aria-hidden="true">01 / 06</span>
+            <button class="back-btn" id="backBtn" aria-label="Back to showroom">← BACK TO RACK</button>
+
+            <button class="stage-arrow stage-arrow--prev" id="prevBtn" aria-label="Previous piece">
+              <span aria-hidden="true">←</span>
+            </button>
+
+            <div class="stage-items" id="stageItems">
+              <div class="stage-item stage-item--side stage-item--prev" id="stagePrev" aria-hidden="true"></div>
+              <div class="stage-item stage-item--center" id="stageCenter"></div>
+              <div class="stage-item stage-item--side stage-item--next" id="stageNext" aria-hidden="true"></div>
+            </div>
+
+            <button class="stage-arrow stage-arrow--next" id="nextBtn" aria-label="Next piece">
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+
+          <div class="product-info" id="productInfo">
+            <p class="product-eyebrow" id="pCategory">HOODIE — BUTTER</p>
+            <h2 class="product-name" id="pName" tabindex="-1">UNKNOWN DZR HOODIE</h2>
+            <p class="product-price" id="pPrice">₦150,000.00</p>
+
+            <div class="frontback" role="group" aria-label="Garment view">
+              <button class="frontback-btn is-active" data-side="front" aria-pressed="true">FRONT</button>
+              <button class="frontback-btn" data-side="back" aria-pressed="false">BACK</button>
+            </div>
+
+            <div class="sizes" id="sizes" role="group" aria-label="Select a size"></div>
+
+            <button class="primary-btn" id="addBtn" disabled>SELECT A SIZE</button>
+            <button class="text-link" id="availabilityBtn" aria-haspopup="dialog">SEE AVAILABILITY</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ───────────────────────── CART DRAWER ───────────────────────── -->
+  <div class="scrim" id="scrim" hidden></div>
+
+  <aside class="cart" id="cartDrawer" aria-label="Shopping cart" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="cart-head">
+      <p class="cart-title">CART <span id="cartCountDrawer">(0)</span></p>
+      <button class="icon-btn" id="cartClose" aria-label="Close cart">✕</button>
+    </div>
+
+    <div class="cart-body" id="cartItems"></div>
+
+    <div class="cart-foot">
+      <div class="cart-subtotal">
+        <span>SUBTOTAL</span>
+        <span id="cartSubtotal">₦0.00</span>
+      </div>
+      <p class="cart-note">SHIPPING &amp; TAXES CALCULATED AT CHECKOUT.</p>
+      <button class="primary-btn" id="checkoutBtn" disabled>CHECKOUT VIA WHATSAPP</button>
+    </div>
+  </aside>
+
+  <!-- ───────────────────────── AVAILABILITY ───────────────────────── -->
+  <dialog class="sheet" id="availabilityDialog" aria-labelledby="availabilityTitle">
+    <div class="sheet-head">
+      <p class="sheet-title" id="availabilityTitle">AVAILABILITY</p>
+      <button class="icon-btn" data-close-dialog aria-label="Close availability">✕</button>
+    </div>
+    <p class="sheet-sub" id="availabilityProduct"></p>
+    <ul class="availability-list" id="availabilityList"></ul>
+    <p class="sheet-note">SOLD OUT SIZES ARE STRUCK THROUGH.</p>
+  </dialog>
+
+  <!-- ───────────────────────── SEARCH ───────────────────────── -->
+  <dialog class="sheet search-sheet" id="searchDialog" aria-labelledby="searchTitle">
+    <div class="sheet-head">
+      <p class="sheet-title" id="searchTitle">SEARCH</p>
+      <button class="icon-btn" data-close-dialog aria-label="Close search">✕</button>
+    </div>
+    <label class="sr-only" for="searchInput">Search pieces</label>
+    <input
+      class="search-input"
+      id="searchInput"
+      type="search"
+      placeholder="TYPE A PIECE — HOODIE, TEE, JACKET"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <ul class="search-results" id="searchResults"></ul>
+  </dialog>
+
+  <!-- ───────────────────────── MENU ───────────────────────── -->
+  <dialog class="sheet menu-sheet" id="menuDialog" aria-labelledby="menuTitle">
+    <div class="sheet-head">
+      <p class="sheet-title" id="menuTitle">MENU</p>
+      <button class="icon-btn" data-close-dialog aria-label="Close menu">✕</button>
+    </div>
+    <nav class="menu-nav" aria-label="Menu">
+      <button data-menu-link="shop">SHOP</button>
+      <button data-menu-link="cart">CART</button>
+      <button data-menu-link="contact">CONTACT</button>
+    </nav>
+    <p class="sheet-note">UNKNOWN — AN ANONYMOUS UNIFORM.<br />LAGOS / WORLDWIDE.</p>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <script defer src="js/data.js"></script>
+  <script defer src="js/garments.js"></script>
+  <script defer src="js/cart.js"></script>
+  <script defer src="js/app.js"></script>
+</body>
+</html>
