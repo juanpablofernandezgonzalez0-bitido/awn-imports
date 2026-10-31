@@ -1,0 +1,189 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import { Menu, X, Search, ShoppingBag } from "lucide-react";
+import { useCart } from "@/lib/cart";
+import CartDrawer from "./CartDrawer";
+
+const links = [
+  { label: "Catálogo", href: "#catalogo" },
+  { label: "Nosotros", href: "#nosotros" },
+  { label: "Contacto", href: "#contacto" },
+];
+
+export default function Header({ site: serverSite }: { site: any }) {
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const { totalItems } = useCart();
+  const { scrollY } = useScroll();
+  const headerBg = useTransform(scrollY, [0, 100], ["rgba(255,255,255,0)", "rgba(255,255,255,0.9)"]);
+  const headerBlur = useTransform(scrollY, [0, 100], ["blur(0px)", "blur(20px)"]);
+  const borderOpacity = useTransform(scrollY, [0, 100], [0, 1]);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/site").then((r) => r.json()).then((s) => {
+      if (s && s.brand) setSite(s);
+    }).catch(() => {});
+  }, []);
+
+  const [site, setSite] = useState(serverSite);
+
+  return (
+    <motion.header
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className="fixed inset-x-0 top-0 z-50"
+    >
+      <div className="bg-neutral-900 px-4 py-2 text-center">
+        <motion.p
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="text-[10px] font-medium uppercase tracking-[0.25em] text-white/90 sm:text-[11px]"
+        >
+          {site.announcement}
+        </motion.p>
+      </div>
+
+      <motion.div
+        style={{
+          backgroundColor: headerBg,
+          backdropFilter: headerBlur,
+        }}
+        className="relative"
+      >
+        <motion.div
+          style={{ opacity: borderOpacity }}
+          className="absolute inset-x-0 bottom-0 h-px bg-neutral-200"
+        />
+
+        <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4 lg:px-8">
+          <a href="#catalogo" className="group flex shrink-0 items-center gap-2.5">
+            <div className="relative">
+              <div className="absolute -inset-1 rounded-xl bg-neutral-900/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <Image
+                src="/logo.png"
+                alt="AWN IMPORT"
+                width={40}
+                height={40}
+                className="relative h-9 w-9 object-contain"
+              />
+            </div>
+            <span className="font-display text-lg font-bold uppercase tracking-tight">
+              AWN<span className="text-neutral-400"> IMPORT</span>
+            </span>
+          </a>
+
+          <ul className="hidden items-center gap-1 lg:flex">
+            {links.map((link) => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  className="relative rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-[0.15em] text-neutral-500 transition-colors duration-300 hover:text-neutral-900"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex items-center gap-1 sm:gap-2">
+            <button
+              aria-label="Buscar"
+              className="hidden h-10 w-10 items-center justify-center rounded-xl text-neutral-400 transition-all duration-300 hover:bg-neutral-100 hover:text-neutral-900 sm:flex"
+            >
+              <Search size={17} />
+            </button>
+            <button
+              aria-label="Carrito"
+              onClick={() => setCartOpen(true)}
+              className="relative flex h-10 w-10 items-center justify-center rounded-xl text-neutral-400 transition-all duration-300 hover:bg-neutral-100 hover:text-neutral-900"
+            >
+              <ShoppingBag size={17} />
+              {totalItems > 0 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-neutral-900 text-[9px] font-bold text-white"
+                >
+                  {totalItems}
+                </motion.span>
+              )}
+            </button>
+            <a
+              href="#catalogo"
+              className="hidden rounded-full bg-neutral-900 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-all duration-300 hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/20 md:block"
+            >
+              {site.ctaLabel}
+            </a>
+
+            <button
+              onClick={() => setOpen((v) => !v)}
+              className="rounded-xl p-2.5 text-neutral-900 transition-colors duration-300 hover:bg-neutral-100 lg:hidden"
+              aria-label="Menú"
+            >
+              {open ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
+        </nav>
+
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden border-b border-neutral-200 bg-white/95 backdrop-blur-xl lg:hidden"
+            >
+              <ul className="flex flex-col gap-1 px-6 py-4">
+                {links.map((link, i) => (
+                  <motion.li
+                    key={link.href}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.05 }}
+                  >
+                    <a
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                      className="block rounded-xl px-4 py-3 text-sm font-bold uppercase tracking-widest text-neutral-700 transition-colors duration-300 hover:bg-neutral-100 hover:text-neutral-900"
+                    >
+                      {link.label}
+                    </a>
+                  </motion.li>
+                ))}
+                <motion.li
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.15 }}
+                  className="mt-2"
+                >
+                  <a
+                    href="#catalogo"
+                    onClick={() => setOpen(false)}
+                    className="block rounded-full bg-neutral-900 px-4 py-3 text-center text-sm font-bold uppercase tracking-wider text-white transition-all duration-300 hover:bg-neutral-800"
+                  >
+                    Ver catálogo
+                  </a>
+                </motion.li>
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} site={serverSite} />
+    </motion.header>
+  );
+}

@@ -3,3 +3,14 @@ __pycache__/
 *.pyc
 node_modules/
 .env
+.env.local
+.next
+.vercel
+public/uploads/*
+!public/uploads/.gitkeep
+data/products.json
+data/site.json
+.env*
+
+/Ropa/
+/fotos agosto/
