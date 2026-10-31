@@ -15,7 +15,7 @@ export default async function Home() {
   return (
     <main className="min-h-screen">
       <Header site={site} />
-      <Hero site={site} />
+      <Hero site={site} products={products} />
       <Marquee items={site.marquee} />
       <Catalog products={products} site={site} />
       <About site={site} />

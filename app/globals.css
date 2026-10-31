@@ -172,3 +172,39 @@
     transition-duration: 0.01ms;
   }
 }
+
+/* ── Portada: vitrina giratoria 3D ── */
+@keyframes hero-spin {
+  from { transform: rotateX(-8deg) rotateY(0deg); }
+  to { transform: rotateX(-8deg) rotateY(-360deg); }
+}
+
+.hero-ring {
+  transform-style: preserve-3d;
+  animation: hero-spin 42s linear infinite;
+}
+
+.hero-stage:hover .hero-ring,
+.hero-stage:focus-within .hero-ring {
+  animation-play-state: paused;
+}
+
+.hero-card {
+  transform-style: preserve-3d;
+}
+
+.hero-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.hero-face-back {
+  transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-ring {
+    animation: none;
+    transform: rotateX(-8deg);
+  }
+}

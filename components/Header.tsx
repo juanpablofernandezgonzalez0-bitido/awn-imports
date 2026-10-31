@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, Search, ShoppingBag } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import CartDrawer from "./CartDrawer";
@@ -20,10 +20,8 @@ export default function Header({ site }: { site: SiteConfig }) {
   const [open, setOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const { totalItems } = useCart();
-  const { scrollY } = useScroll();
-  const headerBg = useTransform(scrollY, [0, 100], ["rgba(255,255,255,0)", "rgba(255,255,255,0.9)"]);
-  const headerBlur = useTransform(scrollY, [0, 100], ["blur(0px)", "blur(20px)"]);
-  const borderOpacity = useTransform(scrollY, [0, 100], [0, 1]);
+  // Sobre la portada (oscura) el header es transparente con texto claro.
+  const onDark = !scrolled && !open;
 
   useEffect(() => {
     const openCart = () => setCartOpen(true);
@@ -32,7 +30,7 @@ export default function Header({ site }: { site: SiteConfig }) {
   }, []);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.85 - 120);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -57,17 +55,13 @@ export default function Header({ site }: { site: SiteConfig }) {
         </motion.p>
       </div>
 
-      <motion.div
-        style={{
-          backgroundColor: headerBg,
-          backdropFilter: headerBlur,
-        }}
-        className="relative"
+      <div
+        className={`relative transition-[background-color,backdrop-filter,box-shadow] duration-500 ${
+          onDark
+            ? "bg-transparent"
+            : "bg-white/90 shadow-[0_1px_0_rgba(0,0,0,0.08)] backdrop-blur-xl"
+        }`}
       >
-        <motion.div
-          style={{ opacity: borderOpacity }}
-          className="absolute inset-x-0 bottom-0 h-px bg-neutral-200"
-        />
 
         <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4 lg:px-8">
           <a href="#inicio" aria-label="AWN IMPORT, ir al inicio" className="group flex shrink-0 items-center gap-2.5">
@@ -78,11 +72,11 @@ export default function Header({ site }: { site: SiteConfig }) {
                 alt="AWN IMPORT"
                 width={40}
                 height={40}
-                className="relative h-9 w-9 object-contain"
+                className={`relative h-9 w-9 object-contain transition duration-500 ${onDark ? "invert" : ""}`}
               />
             </div>
-            <span className="font-display text-lg font-bold uppercase tracking-tight">
-              AWN<span className="text-neutral-400"> IMPORT</span>
+            <span className={`font-display text-lg font-bold uppercase tracking-tight transition-colors duration-500 ${onDark ? "text-white" : "text-neutral-900"}`}>
+              AWN<span className={onDark ? "text-white/50" : "text-neutral-400"}> IMPORT</span>
             </span>
           </a>
 
@@ -91,7 +85,7 @@ export default function Header({ site }: { site: SiteConfig }) {
               <li key={link.href}>
                 <a
                   href={link.href}
-                  className="relative rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-[0.15em] text-neutral-500 transition-colors duration-300 hover:text-neutral-900"
+                  className={`relative rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-[0.15em] transition-colors duration-300 ${onDark ? "text-white/70 hover:text-white" : "text-neutral-500 hover:text-neutral-900"}`}
                 >
                   {link.label}
                 </a>
@@ -103,21 +97,21 @@ export default function Header({ site }: { site: SiteConfig }) {
             <button
               aria-label="Buscar prendas"
               onClick={() => window.dispatchEvent(new Event(OPEN_SEARCH_EVENT))}
-              className="hidden h-10 w-10 items-center justify-center rounded-xl text-neutral-400 transition-all duration-300 hover:bg-neutral-100 hover:text-neutral-900 sm:flex"
+              className={`hidden h-10 w-10 items-center justify-center rounded-xl transition-all duration-300 sm:flex ${onDark ? "text-white/70 hover:bg-white/10 hover:text-white" : "text-neutral-400 hover:bg-neutral-100 hover:text-neutral-900"}`}
             >
               <Search size={17} />
             </button>
             <button
               aria-label={totalItems > 0 ? `Carrito, ${totalItems} prendas` : "Carrito"}
               onClick={() => setCartOpen(true)}
-              className="relative flex h-10 w-10 items-center justify-center rounded-xl text-neutral-400 transition-all duration-300 hover:bg-neutral-100 hover:text-neutral-900"
+              className={`relative flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-300 ${onDark ? "text-white/70 hover:bg-white/10 hover:text-white" : "text-neutral-400 hover:bg-neutral-100 hover:text-neutral-900"}`}
             >
               <ShoppingBag size={17} />
               {totalItems > 0 && (
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-neutral-900 text-[9px] font-bold text-white"
+                  className={`absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full text-[9px] font-bold ${onDark ? "bg-white text-neutral-900" : "bg-neutral-900 text-white"}`}
                 >
                   {totalItems}
                 </motion.span>
@@ -125,14 +119,14 @@ export default function Header({ site }: { site: SiteConfig }) {
             </button>
             <a
               href="#catalogo"
-              className="hidden rounded-full bg-neutral-900 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-all duration-300 hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/20 md:block"
+              className={`hidden rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all duration-300 md:block ${onDark ? "bg-white text-neutral-900 hover:bg-neutral-200" : "bg-neutral-900 text-white hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/20"}`}
             >
               {site.ctaLabel}
             </a>
 
             <button
               onClick={() => setOpen((v) => !v)}
-              className="rounded-xl p-2.5 text-neutral-900 transition-colors duration-300 hover:bg-neutral-100 lg:hidden"
+              className={`rounded-xl p-2.5 transition-colors duration-300 lg:hidden ${onDark ? "text-white hover:bg-white/10" : "text-neutral-900 hover:bg-neutral-100"}`}
               aria-label={open ? "Cerrar menú" : "Abrir menú"}
               aria-expanded={open}
             >
@@ -185,7 +179,7 @@ export default function Header({ site }: { site: SiteConfig }) {
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
+      </div>
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} site={site} />
     </motion.header>
   );
