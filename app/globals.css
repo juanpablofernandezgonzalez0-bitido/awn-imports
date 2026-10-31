@@ -115,3 +115,60 @@
 .animate-pulse-soft {
   animation: pulse-soft 4s ease-in-out infinite;
 }
+
+/* ── Clóset: balanceo del gancho y volteo 3D de la prenda ── */
+@keyframes closet-swing {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(2.4deg); }
+  45% { transform: rotate(-1.6deg); }
+  70% { transform: rotate(0.8deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.closet-hang {
+  transform-origin: 50% 0;
+}
+
+.closet-flip {
+  transform-style: preserve-3d;
+  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.closet-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.closet-face-back {
+  transform: rotateY(180deg);
+}
+
+.closet-flip[data-flipped="true"] {
+  transform: rotateY(180deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .closet-item:hover .closet-hang {
+    animation: closet-swing 1.4s ease-out;
+  }
+  .closet-item:hover .closet-flip,
+  .closet-item:focus-within .closet-flip {
+    transform: rotateY(180deg);
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .closet-item:hover .closet-hang {
+    animation: none;
+  }
+  .closet-flip {
+    transition-duration: 0.01ms;
+  }
+}

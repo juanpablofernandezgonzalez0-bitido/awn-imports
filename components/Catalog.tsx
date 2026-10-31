@@ -2,15 +2,20 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, X } from "lucide-react";
+import { LayoutGrid, Search, Shirt, X } from "lucide-react";
 import { products as defaultProducts, type Product } from "@/lib/products";
 import type { SiteConfig } from "@/lib/site";
 import ProductCard from "./ProductCard";
 import ProductModal from "./ProductModal";
+import ClosetRow from "./ClosetRow";
 import { OPEN_SEARCH_EVENT, productHash, productIdFromHash } from "@/lib/events";
 
 
 type SortKey = "destacados" | "precio-asc" | "precio-desc";
+type ViewMode = "closet" | "grid";
+
+const categoryTitle = (category: string) =>
+  category.toLowerCase() === "sin categoria" ? "Colección AWN" : category;
 
 const sortOptions: { value: SortKey; label: string }[] = [
   { value: "destacados", label: "Destacados" },
@@ -33,6 +38,7 @@ export default function Catalog({
   const [active, setActive] = useState<string>("Todos");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SortKey>("destacados");
+  const [view, setView] = useState<ViewMode>("closet");
   const [selected, setSelected] = useState<Product | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -85,6 +91,16 @@ export default function Catalog({
       return sort === "precio-asc" ? a.price - b.price : b.price - a.price;
     });
   }, [all, active, query, sort]);
+
+  // Un riel de clóset por categoría, respetando búsqueda y orden.
+  const groups = useMemo(
+    () =>
+      categories
+        .filter((c) => c !== "Todos" && (active === "Todos" || c === active))
+        .map((c) => ({ category: c, items: visible.filter((p) => p.category === c) }))
+        .filter((g) => g.items.length > 0),
+    [categories, active, visible],
+  );
 
   const showCategories = categories.length > 2;
   const hasFilters = query !== "" || active !== "Todos";
@@ -174,8 +190,28 @@ export default function Catalog({
               <p className="text-xs font-medium tabular-nums text-neutral-500" aria-live="polite">
                 {visible.length} {visible.length === 1 ? "resultado" : "resultados"}
               </p>
+              <div role="group" aria-label="Vista del catálogo" className="flex rounded-full bg-neutral-100 p-1">
+                {([
+                  { value: "closet", label: "Clóset", Icon: Shirt },
+                  { value: "grid", label: "Cuadrícula", Icon: LayoutGrid },
+                ] as const).map(({ value, label, Icon }) => (
+                  <button
+                    key={value}
+                    onClick={() => setView(value)}
+                    aria-pressed={view === value}
+                    aria-label={`Vista ${label}`}
+                    title={label}
+                    className={`flex h-9 items-center gap-1.5 rounded-full px-3 text-xs font-bold transition ${
+                      view === value ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-900"
+                    }`}
+                  >
+                    <Icon size={15} />
+                    <span className="hidden lg:inline">{label}</span>
+                  </button>
+                ))}
+              </div>
               <label className="flex items-center gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-neutral-400">Ordenar</span>
+                <span className="hidden text-xs font-bold uppercase tracking-wider text-neutral-400 sm:inline">Ordenar</span>
                 <select
                   value={sort}
                   onChange={(e) => setSort(e.target.value as SortKey)}
@@ -192,6 +228,19 @@ export default function Catalog({
           </div>
         </div>
 
+        {view === "closet" ? (
+          <div className="mt-10 space-y-14 sm:space-y-16">
+            {groups.map((g, i) => (
+              <ClosetRow
+                key={g.category}
+                title={categoryTitle(g.category)}
+                index={i}
+                products={g.items}
+                onSelect={openProduct}
+              />
+            ))}
+          </div>
+        ) : (
         <motion.div
           layout
           className="mt-10 grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-12 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-14 xl:grid-cols-4"
@@ -202,6 +251,7 @@ export default function Catalog({
             ))}
           </AnimatePresence>
         </motion.div>
+        )}
 
         {visible.length === 0 && (
           <motion.div
