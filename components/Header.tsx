@@ -6,7 +6,7 @@ import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion"
 import { Menu, X, Search, ShoppingBag } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import CartDrawer from "./CartDrawer";
-import { OPEN_SEARCH_EVENT } from "./Catalog";
+import { OPEN_CART_EVENT, OPEN_SEARCH_EVENT } from "@/lib/events";
 import type { SiteConfig } from "@/lib/site";
 
 const links = [
@@ -24,6 +24,12 @@ export default function Header({ site }: { site: SiteConfig }) {
   const headerBg = useTransform(scrollY, [0, 100], ["rgba(255,255,255,0)", "rgba(255,255,255,0.9)"]);
   const headerBlur = useTransform(scrollY, [0, 100], ["blur(0px)", "blur(20px)"]);
   const borderOpacity = useTransform(scrollY, [0, 100], [0, 1]);
+
+  useEffect(() => {
+    const openCart = () => setCartOpen(true);
+    window.addEventListener(OPEN_CART_EVENT, openCart);
+    return () => window.removeEventListener(OPEN_CART_EVENT, openCart);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);

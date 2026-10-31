@@ -60,10 +60,16 @@ export default function ProductCard({
       onClick={() => onSelect(product)}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === "Enter" && onSelect(product)}
+      aria-label={`Ver ${product.name}`}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onSelect(product);
+        }
+      }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="group cursor-pointer"
+      className="group cursor-pointer rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-4 lg:rounded-3xl"
     >
       <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-neutral-100 lg:rounded-3xl">
         {count > 1 ? (
@@ -89,11 +95,19 @@ export default function ProductCard({
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none" />
 
-        {count > 1 && (
-          <div className="absolute left-2.5 top-2.5 z-10 flex items-center gap-1 rounded-full bg-black/50 px-2 py-1 backdrop-blur-md sm:left-3 sm:top-3 lg:left-4 lg:top-4">
-            <Camera size={10} className="text-white/90 lg:hidden" />
-            <Camera size={14} className="text-white/90 hidden lg:block" />
-            <span className="text-[9px] font-bold text-white/90 sm:text-[10px] lg:text-xs">{count}</span>
+        {(product.tag || count > 1) && (
+          <div className="pointer-events-none absolute left-2.5 top-2.5 z-10 flex flex-wrap items-center gap-1.5 sm:left-3 sm:top-3 lg:left-4 lg:top-4">
+            {product.tag && (
+              <span className="rounded-full bg-neutral-900 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-white sm:text-[10px] lg:text-xs">
+                {product.tag}
+              </span>
+            )}
+            {count > 1 && (
+              <span className="flex items-center gap-1 rounded-full bg-black/50 px-2 py-1 backdrop-blur-md">
+                <Camera size={12} className="text-white/90" />
+                <span className="text-[9px] font-bold text-white/90 sm:text-[10px] lg:text-xs">{count}</span>
+              </span>
+            )}
           </div>
         )}
 
@@ -139,7 +153,7 @@ export default function ProductCard({
             {product.name}
           </h3>
           <p className="mt-0.5 text-[10px] text-neutral-400 sm:text-xs lg:text-sm">
-            {product.category}
+            {product.category.toLowerCase() === "sin categoria" ? "AWN IMPORT" : product.category}
           </p>
         </div>
         <div className="shrink-0 text-right">

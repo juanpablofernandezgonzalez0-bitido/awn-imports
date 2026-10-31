@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, X } from "lucide-react";
 import { products as defaultProducts, type Product } from "@/lib/products";
 import type { SiteConfig } from "@/lib/site";
 import ProductCard from "./ProductCard";
 import ProductModal from "./ProductModal";
+import { OPEN_SEARCH_EVENT, productHash, productIdFromHash } from "@/lib/events";
 
-/** Evento global que dispara el botón de búsqueda del header. */
-export const OPEN_SEARCH_EVENT = "awn:open-search";
 
 type SortKey = "destacados" | "precio-asc" | "precio-desc";
 
@@ -44,6 +43,30 @@ export default function Catalog({
     };
     window.addEventListener(OPEN_SEARCH_EVENT, focusSearch);
     return () => window.removeEventListener(OPEN_SEARCH_EVENT, focusSearch);
+  }, []);
+
+  // Enlace directo: /#prenda-<id> abre la prenda al cargar la página.
+  useEffect(() => {
+    const openFromHash = () => {
+      const id = productIdFromHash(window.location.hash);
+      const match = id ? all.find((p) => p.id === id) : undefined;
+      if (match) setSelected(match);
+    };
+    openFromHash();
+    window.addEventListener("hashchange", openFromHash);
+    return () => window.removeEventListener("hashchange", openFromHash);
+  }, [all]);
+
+  const openProduct = (product: Product) => {
+    setSelected(product);
+    window.history.replaceState(null, "", productHash(product.id));
+  };
+
+  const closeProduct = useCallback(() => {
+    setSelected(null);
+    if (productIdFromHash(window.location.hash)) {
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
   }, []);
 
   const visible = useMemo(() => {
@@ -175,7 +198,7 @@ export default function Catalog({
         >
           <AnimatePresence mode="popLayout">
             {visible.map((product) => (
-              <ProductCard key={product.id} product={product} site={site} onSelect={setSelected} />
+              <ProductCard key={product.id} product={product} site={site} onSelect={openProduct} />
             ))}
           </AnimatePresence>
         </motion.div>
@@ -201,7 +224,7 @@ export default function Catalog({
         )}
       </div>
 
-      <ProductModal product={selected} site={site} onClose={() => setSelected(null)} />
+      <ProductModal product={selected} site={site} onClose={closeProduct} />
     </section>
   );
 }
