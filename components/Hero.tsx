@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { waLink, type SiteConfig } from "@/lib/site";
 
@@ -39,6 +39,62 @@ function RevealWords({ text, offset, className }: { text: string; offset: number
           </span>
         ))}
     </>
+  );
+}
+
+/**
+ * Logo de la marca: se "pinta" como un brochazo al entrar, se inclina en 3D
+ * siguiendo el cursor y una luz suave lo sigue. En móvil flota despacio.
+ */
+function LogoStage({ name }: { name: string }) {
+  const reduce = useReducedMotion();
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 90, damping: 18, mass: 0.6 });
+  const sy = useSpring(my, { stiffness: 90, damping: 18, mass: 0.6 });
+  const rotateY = useTransform(sx, [-0.5, 0.5], [-12, 12]);
+  const rotateX = useTransform(sy, [-0.5, 0.5], [9, -9]);
+  const glowX = useTransform(sx, [-0.5, 0.5], ["30%", "70%"]);
+  const glowY = useTransform(sy, [-0.5, 0.5], ["32%", "68%"]);
+
+  useEffect(() => {
+    if (reduce || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    const onMove = (e: PointerEvent) => {
+      mx.set(e.clientX / window.innerWidth - 0.5);
+      my.set(e.clientY / window.innerHeight - 0.5);
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, [mx, my, reduce]);
+
+  return (
+    <div className="relative mx-auto aspect-square w-full max-w-[22rem] sm:max-w-[28rem] lg:max-w-[34rem]" style={{ perspective: "1200px" }}>
+      {/* Luz que sigue al cursor */}
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.08] blur-3xl"
+        style={{ left: glowX, top: glowY }}
+      />
+      <motion.div className="relative h-full w-full" style={{ rotateX, rotateY }}>
+        <div className="logo-float relative h-full w-full">
+          <motion.div
+            className="absolute inset-0"
+            initial={reduce ? false : { clipPath: "inset(0% 100% 0% 0%)" }}
+            animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
+            transition={{ duration: 1.6, delay: 0.45, ease: EASE }}
+          >
+            <Image
+              src="/logo.png"
+              alt={name}
+              fill
+              priority
+              sizes="(min-width: 1024px) 544px, (min-width: 640px) 448px, 352px"
+              className="hero-logo object-contain"
+            />
+          </motion.div>
+        </div>
+      </motion.div>
+    </div>
   );
 }
 
@@ -112,20 +168,24 @@ export default function Hero({ site }: { site: SiteConfig }) {
           transition={{ duration: 1.6, delay: 0.3, ease: EASE }}
           className="relative order-1 lg:order-none"
         >
-          <div className="relative mx-auto aspect-square w-full max-w-[22rem] sm:max-w-[28rem] lg:max-w-[34rem]">
-            {/* Halo suave detrás del logo */}
-            <div className="pointer-events-none absolute inset-[12%] rounded-full bg-white/[0.06] blur-3xl" />
-            <Image
-              src="/logo.png"
-              alt={site.name}
-              fill
-              priority
-              sizes="(min-width: 1024px) 544px, (min-width: 640px) 448px, 352px"
-              className="hero-logo object-contain"
-            />
-          </div>
+          <LogoStage name={site.name} />
         </motion.div>
       </div>
+
+      {/* Indicador de scroll */}
+      <motion.a
+        href="#catalogo"
+        aria-label="Bajar al catálogo"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 2 }}
+        className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 text-[10px] font-medium uppercase tracking-[0.3em] text-white/30 transition hover:text-white/60 lg:flex"
+      >
+        Desliza
+        <span className="relative h-10 w-px overflow-hidden bg-white/10">
+          <span className="scroll-cue absolute inset-x-0 top-0 h-1/2 bg-white/60" />
+        </span>
+      </motion.a>
     </section>
   );
 }

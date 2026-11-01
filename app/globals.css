@@ -179,3 +179,28 @@
   -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 55%, transparent 100%);
   mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 55%, transparent 100%);
 }
+
+@keyframes logo-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.logo-float {
+  animation: logo-float 7s ease-in-out infinite;
+}
+
+@keyframes scroll-cue {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+
+.scroll-cue {
+  animation: scroll-cue 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-float,
+  .scroll-cue {
+    animation: none;
+  }
+}
