@@ -242,7 +242,7 @@ export default function ProductModal({
             {/* ── Galería ── */}
             <div className="relative shrink-0 bg-neutral-100 md:flex md:w-[56%] md:flex-col">
               <div
-                className={`relative aspect-[4/5] w-full touch-pan-y select-none overflow-hidden md:aspect-auto md:min-h-0 md:flex-1 ${
+                className={`relative h-[48svh] max-h-[440px] w-full touch-pan-y select-none overflow-hidden md:h-auto md:max-h-none md:min-h-0 md:flex-1 ${
                   count > 0 ? (zoom ? "md:cursor-zoom-out" : "md:cursor-zoom-in") : ""
                 }`}
                 onClick={toggleZoom}

@@ -22,7 +22,7 @@ function Photo({ src, alt }: { src: string; alt: string }) {
       src={src}
       alt={alt}
       fill
-      sizes="(min-width: 1024px) 260px, (min-width: 640px) 240px, 62vw"
+      sizes="(min-width: 1024px) 260px, (min-width: 640px) 240px, 40vw"
       className="object-cover"
     />
   );
@@ -62,7 +62,7 @@ function ClosetItem({
   const category = product.category.toLowerCase() === "sin categoria" ? "AWN IMPORT" : product.category;
 
   return (
-    <li className="closet-item group relative w-[62vw] max-w-[280px] shrink-0 snap-start sm:w-[240px] lg:w-[260px]">
+    <li className="closet-item group relative w-[40vw] max-w-[280px] shrink-0 snap-start sm:w-[240px] lg:w-[260px]">
       <div className="closet-hang">
         <Hanger className="relative z-10 mx-auto -mb-2 block h-auto w-[82%] text-neutral-400 transition-colors duration-300 group-hover:text-neutral-700" />
 
@@ -93,12 +93,12 @@ function ClosetItem({
 
               <div className="pointer-events-none absolute left-3 top-3 flex flex-wrap gap-1.5">
                 {product.tag && (
-                  <span className="rounded-full bg-neutral-900 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
+                  <span className="rounded-full bg-neutral-900 px-2 py-0.5 text-[9px] sm:px-2.5 sm:py-1 sm:text-[10px] font-bold uppercase tracking-wider text-white">
                     {product.tag}
                   </span>
                 )}
                 {hasDiscount && (
-                  <span className="rounded-full bg-red-600 px-2.5 py-1 text-[10px] font-bold text-white">
+                  <span className="rounded-full bg-red-600 px-2 py-0.5 text-[9px] sm:px-2.5 sm:py-1 sm:text-[10px] font-bold text-white">
                     -{Math.round((1 - product.price / product.originalPrice!) * 100)}%
                   </span>
                 )}
@@ -165,31 +165,31 @@ function ClosetItem({
           onClick={() => setFlipped((f) => !f)}
           aria-label={flipped ? "Ver frente de la prenda" : "Girar la prenda"}
           aria-pressed={flipped}
-          className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-neutral-900 shadow-md ring-1 ring-black/5 backdrop-blur [@media(hover:hover)_and_(pointer:fine)]:hidden"
+          className="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 sm:h-10 sm:w-10 text-neutral-900 shadow-md ring-1 ring-black/5 backdrop-blur [@media(hover:hover)_and_(pointer:fine)]:hidden"
         >
-          <RotateCw size={16} className={`transition-transform duration-500 ${flipped ? "rotate-180" : ""}`} />
+          <RotateCw size={14} className={`transition-transform duration-500 ${flipped ? "rotate-180" : ""}`} />
         </button>
         </div>
 
-        <div className="mt-3 flex items-start justify-between gap-2 px-1">
+        <div className="mt-2.5 flex flex-col gap-0.5 px-0.5 sm:mt-3 sm:flex-row sm:items-start sm:justify-between sm:gap-2 sm:px-1">
           <div className="min-w-0">
             <h3
-              className={`truncate font-display text-sm font-bold uppercase tracking-tight ${
+              className={`truncate font-display text-[13px] font-bold uppercase sm:text-sm tracking-tight ${
                 product.outOfStock ? "text-neutral-400" : "text-neutral-900"
               }`}
             >
               {product.name}
             </h3>
-            <p className="mt-0.5 text-xs text-neutral-400">{category}</p>
+            <p className="mt-0.5 truncate text-[11px] text-neutral-400 sm:text-xs">{category}</p>
           </div>
-          <div className="shrink-0 text-right">
+          <div className="flex items-baseline gap-1.5 sm:block sm:shrink-0 sm:text-right">
             {hasDiscount && (
               <p className="text-[11px] font-bold tabular-nums text-neutral-400 line-through">
                 {formatCOP(product.originalPrice!)}
               </p>
             )}
             <p
-              className={`font-display text-sm font-bold tabular-nums ${
+              className={`font-display text-[13px] font-bold tabular-nums sm:text-sm ${
                 hasDiscount ? "text-red-600" : product.price > 0 && !product.outOfStock ? "text-neutral-900" : "text-neutral-400"
               }`}
             >
@@ -223,13 +223,13 @@ function HangingItem({
         src={src}
         alt={alt}
         fill
-        sizes="(min-width: 1024px) 260px, (min-width: 640px) 240px, 62vw"
+        sizes="(min-width: 1024px) 260px, (min-width: 640px) 240px, 40vw"
         className="object-contain object-top drop-shadow-[0_18px_16px_rgba(0,0,0,0.22)]"
       />
     );
 
   return (
-    <li className="closet-item group relative w-[62vw] max-w-[280px] shrink-0 snap-start sm:w-[240px] lg:w-[260px]">
+    <li className="closet-item group relative w-[40vw] max-w-[280px] shrink-0 snap-start sm:w-[240px] lg:w-[260px]">
       {/* El balanceo pivota en la punta del gancho, que se apoya sobre la barra */}
       <div className="closet-hang" style={{ transformOrigin: "50% 0.5%" }}>
         <div className="relative">
@@ -255,12 +255,12 @@ function HangingItem({
 
             <div className="pointer-events-none absolute bottom-2 left-2 flex flex-wrap gap-1.5">
               {product.tag && (
-                <span className="rounded-full bg-neutral-900 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
+                <span className="rounded-full bg-neutral-900 px-2 py-0.5 text-[9px] sm:px-2.5 sm:py-1 sm:text-[10px] font-bold uppercase tracking-wider text-white">
                   {product.tag}
                 </span>
               )}
               {hasDiscount && (
-                <span className="rounded-full bg-red-600 px-2.5 py-1 text-[10px] font-bold text-white">
+                <span className="rounded-full bg-red-600 px-2 py-0.5 text-[9px] sm:px-2.5 sm:py-1 sm:text-[10px] font-bold text-white">
                   -{Math.round((1 - product.price / product.originalPrice!) * 100)}%
                 </span>
               )}
@@ -281,26 +281,26 @@ function HangingItem({
               onClick={() => setFlipped((f) => !f)}
               aria-label={flipped ? "Ver frente de la prenda" : "Ver espalda de la prenda"}
               aria-pressed={flipped}
-              className="absolute bottom-2 right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-neutral-900 shadow-md ring-1 ring-black/5 backdrop-blur [@media(hover:hover)_and_(pointer:fine)]:hidden"
+              className="absolute bottom-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 sm:h-10 sm:w-10 text-neutral-900 shadow-md ring-1 ring-black/5 backdrop-blur [@media(hover:hover)_and_(pointer:fine)]:hidden"
             >
-              <RotateCw size={16} className={`transition-transform duration-500 ${flipped ? "rotate-180" : ""}`} />
+              <RotateCw size={14} className={`transition-transform duration-500 ${flipped ? "rotate-180" : ""}`} />
             </button>
           )}
         </div>
 
-        <div className="mt-3 flex items-start justify-between gap-2 px-1">
+        <div className="mt-2.5 flex flex-col gap-0.5 px-0.5 sm:mt-3 sm:flex-row sm:items-start sm:justify-between sm:gap-2 sm:px-1">
           <div className="min-w-0">
-            <h3 className={`truncate font-display text-sm font-bold uppercase tracking-tight ${product.outOfStock ? "text-neutral-400" : "text-neutral-900"}`}>
+            <h3 className={`truncate font-display text-[13px] font-bold uppercase sm:text-sm tracking-tight ${product.outOfStock ? "text-neutral-400" : "text-neutral-900"}`}>
               {product.name}
             </h3>
-            <p className="mt-0.5 text-xs text-neutral-400">{category}</p>
+            <p className="mt-0.5 truncate text-[11px] text-neutral-400 sm:text-xs">{category}</p>
           </div>
-          <div className="shrink-0 text-right">
+          <div className="flex items-baseline gap-1.5 sm:block sm:shrink-0 sm:text-right">
             {hasDiscount && (
               <p className="text-[11px] font-bold tabular-nums text-neutral-400 line-through">{formatCOP(product.originalPrice!)}</p>
             )}
             <p
-              className={`font-display text-sm font-bold tabular-nums ${
+              className={`font-display text-[13px] font-bold tabular-nums sm:text-sm ${
                 hasDiscount ? "text-red-600" : product.price > 0 && !product.outOfStock ? "text-neutral-900" : "text-neutral-400"
               }`}
             >
@@ -406,7 +406,7 @@ export default function ClosetRow({
         <ul
           ref={railRef}
           onScroll={updateArrows}
-          className="no-scrollbar relative z-10 flex snap-x snap-mandatory scroll-px-6 gap-5 overflow-x-auto px-6 pb-8 pt-[1.4rem] sm:scroll-px-8 sm:gap-7 sm:px-8"
+          className="no-scrollbar relative z-10 flex snap-x snap-mandatory scroll-px-5 gap-3.5 overflow-x-auto px-5 pb-8 pt-[1.4rem] sm:scroll-px-8 sm:gap-7 sm:px-8"
         >
           {products.map((product) => (
             product.hanger ? (

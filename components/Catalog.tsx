@@ -157,8 +157,8 @@ export default function Catalog({
         </motion.div>
 
         {/* Barra de herramientas: búsqueda, orden y conteo */}
-        <div className="sticky top-[6.5rem] z-30 -mx-6 mt-10 border-y border-neutral-200/70 bg-white/85 px-6 py-3 backdrop-blur-xl sm:top-[6.75rem] sm:mx-0 sm:rounded-2xl sm:border sm:px-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="sticky top-[6.5rem] z-30 -mx-6 mt-10 border-y border-neutral-200/70 bg-white/85 px-5 py-2.5 backdrop-blur-xl sm:py-3 sm:top-[6.75rem] sm:mx-0 sm:rounded-2xl sm:border sm:px-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
             <label className="relative flex-1">
               <span className="sr-only">Buscar prendas</span>
               <Search size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" />
@@ -168,8 +168,8 @@ export default function Catalog({
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => e.key === "Escape" && setQuery("")}
-                placeholder="Buscar por nombre, categoría o descripción"
-                className="h-11 w-full rounded-full bg-neutral-100 pl-11 pr-10 text-sm text-neutral-900 outline-none ring-1 ring-transparent transition placeholder:text-neutral-400 focus:bg-white focus:ring-neutral-900 [&::-webkit-search-cancel-button]:hidden"
+                placeholder="Buscar prendas…"
+                className="h-10 w-full rounded-full bg-neutral-100 pl-11 pr-10 text-base sm:h-11 sm:text-sm text-neutral-900 outline-none ring-1 ring-transparent transition placeholder:text-neutral-400 focus:bg-white focus:ring-neutral-900 [&::-webkit-search-cancel-button]:hidden"
               />
               {query && (
                 <button
@@ -187,7 +187,7 @@ export default function Catalog({
             </label>
 
             <div className="flex items-center justify-between gap-3 sm:justify-end">
-              <p className="text-xs font-medium tabular-nums text-neutral-500" aria-live="polite">
+              <p className="whitespace-nowrap text-xs font-medium tabular-nums text-neutral-500" aria-live="polite">
                 {visible.length} {visible.length === 1 ? "resultado" : "resultados"}
               </p>
               <div role="group" aria-label="Vista del catálogo" className="flex rounded-full bg-neutral-100 p-1">
@@ -201,7 +201,7 @@ export default function Catalog({
                     aria-pressed={view === value}
                     aria-label={`Vista ${label}`}
                     title={label}
-                    className={`flex h-9 items-center gap-1.5 rounded-full px-3 text-xs font-bold transition ${
+                    className={`flex h-8 items-center gap-1.5 rounded-full px-2.5 text-xs sm:h-9 sm:px-3 font-bold transition ${
                       view === value ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-900"
                     }`}
                   >
@@ -210,12 +210,12 @@ export default function Catalog({
                   </button>
                 ))}
               </div>
-              <label className="flex items-center gap-2">
+              <label className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
                 <span className="hidden text-xs font-bold uppercase tracking-wider text-neutral-400 sm:inline">Ordenar</span>
                 <select
                   value={sort}
                   onChange={(e) => setSort(e.target.value as SortKey)}
-                  className="h-11 cursor-pointer rounded-full bg-neutral-100 px-4 text-sm font-medium text-neutral-900 outline-none ring-1 ring-transparent transition hover:bg-neutral-200 focus:ring-neutral-900"
+                  className="h-10 w-full min-w-0 cursor-pointer rounded-full bg-neutral-100 px-3.5 text-base font-medium sm:h-11 sm:w-auto sm:px-4 sm:text-sm text-neutral-900 outline-none ring-1 ring-transparent transition hover:bg-neutral-200 focus:ring-neutral-900"
                 >
                   {sortOptions.map((o) => (
                     <option key={o.value} value={o.value}>
