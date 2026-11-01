@@ -174,37 +174,29 @@
 }
 
 /* ── Portada: vitrina giratoria 3D ── */
-@keyframes hero-spin {
-  from { transform: rotateX(-8deg) rotateY(0deg); }
-  to { transform: rotateX(-8deg) rotateY(-360deg); }
+@keyframes spot-sway {
+  0%, 100% { transform: rotate(-0.7deg); }
+  50% { transform: rotate(0.7deg); }
 }
 
-.hero-ring {
-  transform-style: preserve-3d;
-  animation: hero-spin 42s linear infinite;
+.spot-sway {
+  transform-origin: 50% 0;
+  animation: spot-sway 6s ease-in-out infinite;
 }
 
-.hero-stage:hover .hero-ring,
-.hero-stage:focus-within .hero-ring {
-  animation-play-state: paused;
+@keyframes spot-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 
-.hero-card {
-  transform-style: preserve-3d;
-}
-
-.hero-face {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.hero-face-back {
-  transform: rotateY(180deg);
+.spot-fill {
+  animation-name: spot-fill;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-ring {
+  .spot-sway {
     animation: none;
-    transform: rotateX(-8deg);
   }
 }
