@@ -36,6 +36,7 @@ export default function ProductCard({
     return () => clearInterval(interval);
   }, [hovered, count]);
 
+  const fit = product.hanger ? "object-contain object-top p-3 drop-shadow-[0_14px_14px_rgba(0,0,0,0.18)]" : "object-cover";
   const renderImage = (src: string, className: string, priority?: boolean) =>
     src.startsWith("data:") ? (
       <img src={src} alt={product.name} className={className} />
@@ -71,7 +72,7 @@ export default function ProductCard({
       onMouseLeave={() => setHovered(false)}
       className="group cursor-pointer rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-4 lg:rounded-3xl"
     >
-      <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-neutral-100 lg:rounded-3xl">
+      <div className={`relative aspect-[3/4] overflow-hidden rounded-2xl lg:rounded-3xl ${product.hanger ? "bg-gradient-to-b from-neutral-100 to-neutral-200" : "bg-neutral-100"}`}>
         {count > 1 ? (
           <>
             {imgs.map((src, i) => (
@@ -81,12 +82,12 @@ export default function ProductCard({
                   i === previewIdx ? "opacity-100" : "opacity-0"
                 }`}
               >
-                {renderImage(src, "h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105")}
+                {renderImage(src, `h-full w-full ${fit} transition-transform duration-700 ease-out group-hover:scale-105`)}
               </div>
             ))}
           </>
         ) : count === 1 ? (
-          renderImage(imgs[0], "h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105", true)
+          renderImage(imgs[0], `h-full w-full ${fit} transition-transform duration-700 ease-out group-hover:scale-105`, true)
         ) : (
           <div className="flex h-full items-center justify-center bg-neutral-100 text-neutral-300">
             <span className="text-xs font-bold uppercase">Sin foto</span>

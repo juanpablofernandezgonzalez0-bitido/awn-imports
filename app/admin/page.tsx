@@ -346,6 +346,24 @@ function ProductosTab({ products, allProducts, editing, setEditing, saveProducts
                   <p className="text-[11px] text-neutral-400">{draft.outOfStock ? "Prenda no disponible para venta" : "Prenda disponible"}</p>
                 </div>
               </div>
+              <div className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3">
+                <button
+                  type="button"
+                  onClick={() => update("hanger", !draft.hanger || undefined)}
+                  aria-pressed={!!draft.hanger}
+                  className={`relative h-6 w-11 shrink-0 rounded-full transition-colors duration-300 ${draft.hanger ? "bg-neutral-900" : "bg-neutral-300"}`}
+                >
+                  <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform duration-300 ${draft.hanger ? "translate-x-5" : ""}`} />
+                </button>
+                <div>
+                  <p className="text-sm font-bold">Foto con gancho (sin fondo)</p>
+                  <p className="text-[11px] text-neutral-400">
+                    {draft.hanger
+                      ? "Cuelga de la barra del clóset. 1.ª foto: frente · 2.ª foto: espalda (PNG sin fondo)"
+                      : "Actívalo si subes fotos PNG de la prenda en su gancho y sin fondo"}
+                  </p>
+                </div>
+              </div>
               <Field label="Etiqueta (opcional)" value={draft.tag ?? ""} onChange={(v) => update("tag", v || undefined)} />
               <Field label="Descripcion" value={draft.description} onChange={(v) => update("description", v)} multiline />
               <Field label="Tallas (separadas por coma)" value={(draft.sizes ?? []).join(", ")} onChange={(v) => update("sizes", v.split(",").map((s: string) => s.trim()).filter(Boolean))} />

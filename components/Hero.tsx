@@ -72,11 +72,11 @@ function Showcase({ products }: { products: Product[] }) {
               style={{ transform: `rotateY(${angle}deg) translateZ(calc(var(--w) * ${factor.toFixed(4)} + 18px))` }}
             >
               {/* Frente: foto */}
-              <span className="hero-face absolute inset-0 overflow-hidden rounded-lg bg-neutral-800 transition-transform duration-500 group-hover:scale-[1.03] group-focus-visible:ring-2 group-focus-visible:ring-white">
+              <span className={`hero-face absolute inset-0 overflow-hidden rounded-lg ${p.hanger ? "bg-neutral-200" : "bg-neutral-800"} transition-transform duration-500 group-hover:scale-[1.03] group-focus-visible:ring-2 group-focus-visible:ring-white`}>
                 {src?.startsWith("data:") ? (
                   <img src={src} alt="" className="h-full w-full object-cover" />
                 ) : src ? (
-                  <Image src={src} alt="" fill sizes="180px" className="object-cover" priority={i < 4} />
+                  <Image src={src} alt="" fill sizes="180px" className={p.hanger ? "object-contain object-top p-2" : "object-cover"} priority={i < 4} />
                 ) : null}
               </span>
               {/* Reverso: placa de marca */}

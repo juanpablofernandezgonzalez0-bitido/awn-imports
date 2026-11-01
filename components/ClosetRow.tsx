@@ -202,6 +202,117 @@ function ClosetItem({
   );
 }
 
+/** Prenda fotografiada en su propio gancho y sin fondo: cuelga directamente de la barra. */
+function HangingItem({
+  product,
+  onSelect,
+}: {
+  product: Product;
+  onSelect: (product: Product) => void;
+}) {
+  const [front, back] = getAllImages(product);
+  const [flipped, setFlipped] = useState(false);
+  const hasDiscount = !!(product.originalPrice && product.originalPrice > product.price);
+  const category = product.category.toLowerCase() === "sin categoria" ? "AWN IMPORT" : product.category;
+
+  const cutout = (src: string, alt: string) =>
+    src.startsWith("data:") ? (
+      <img src={src} alt={alt} className="absolute inset-0 h-full w-full object-contain object-top drop-shadow-[0_18px_16px_rgba(0,0,0,0.22)]" />
+    ) : (
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(min-width: 1024px) 260px, (min-width: 640px) 240px, 62vw"
+        className="object-contain object-top drop-shadow-[0_18px_16px_rgba(0,0,0,0.22)]"
+      />
+    );
+
+  return (
+    <li className="closet-item group relative w-[62vw] max-w-[280px] shrink-0 snap-start sm:w-[240px] lg:w-[260px]">
+      {/* El balanceo pivota en la punta del gancho, que se apoya sobre la barra */}
+      <div className="closet-hang" style={{ transformOrigin: "50% 0.5%" }}>
+        <div className="relative">
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label={`Ver ${product.name}`}
+            onClick={() => onSelect(product)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onSelect(product);
+              }
+            }}
+            className="relative aspect-[3/4] w-full cursor-pointer rounded-2xl outline-none [perspective:1400px] focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-4"
+          >
+            <div className="closet-flip relative h-full w-full" data-flipped={flipped}>
+              <div className="closet-face absolute inset-0">{front && cutout(front, product.name)}</div>
+              <div className="closet-face closet-face-back absolute inset-0">
+                {cutout(back ?? front, `${product.name}, vista posterior`)}
+              </div>
+            </div>
+
+            <div className="pointer-events-none absolute bottom-2 left-2 flex flex-wrap gap-1.5">
+              {product.tag && (
+                <span className="rounded-full bg-neutral-900 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
+                  {product.tag}
+                </span>
+              )}
+              {hasDiscount && (
+                <span className="rounded-full bg-red-600 px-2.5 py-1 text-[10px] font-bold text-white">
+                  -{Math.round((1 - product.price / product.originalPrice!) * 100)}%
+                </span>
+              )}
+            </div>
+
+            {product.outOfStock && (
+              <div className="pointer-events-none absolute inset-x-0 top-1/2 flex justify-center">
+                <span className="rounded-full bg-white px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider text-neutral-900 shadow-md">
+                  Agotado
+                </span>
+              </div>
+            )}
+          </div>
+
+          {back && (
+            <button
+              type="button"
+              onClick={() => setFlipped((f) => !f)}
+              aria-label={flipped ? "Ver frente de la prenda" : "Ver espalda de la prenda"}
+              aria-pressed={flipped}
+              className="absolute bottom-2 right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-neutral-900 shadow-md ring-1 ring-black/5 backdrop-blur [@media(hover:hover)_and_(pointer:fine)]:hidden"
+            >
+              <RotateCw size={16} className={`transition-transform duration-500 ${flipped ? "rotate-180" : ""}`} />
+            </button>
+          )}
+        </div>
+
+        <div className="mt-3 flex items-start justify-between gap-2 px-1">
+          <div className="min-w-0">
+            <h3 className={`truncate font-display text-sm font-bold uppercase tracking-tight ${product.outOfStock ? "text-neutral-400" : "text-neutral-900"}`}>
+              {product.name}
+            </h3>
+            <p className="mt-0.5 text-xs text-neutral-400">{category}</p>
+          </div>
+          <div className="shrink-0 text-right">
+            {hasDiscount && (
+              <p className="text-[11px] font-bold tabular-nums text-neutral-400 line-through">{formatCOP(product.originalPrice!)}</p>
+            )}
+            <p
+              className={`font-display text-sm font-bold tabular-nums ${
+                hasDiscount ? "text-red-600" : product.price > 0 && !product.outOfStock ? "text-neutral-900" : "text-neutral-400"
+              }`}
+            >
+              {formatPrice(product.price)}
+            </p>
+          </div>
+        </div>
+      </div>
+    </li>
+  );
+}
+
 export default function ClosetRow({
   title,
   index,
@@ -298,7 +409,11 @@ export default function ClosetRow({
           className="no-scrollbar relative z-10 flex snap-x snap-mandatory scroll-px-6 gap-5 overflow-x-auto px-6 pb-8 pt-[1.4rem] sm:scroll-px-8 sm:gap-7 sm:px-8"
         >
           {products.map((product) => (
-            <ClosetItem key={product.id} product={product} onSelect={onSelect} />
+            product.hanger ? (
+              <HangingItem key={product.id} product={product} onSelect={onSelect} />
+            ) : (
+              <ClosetItem key={product.id} product={product} onSelect={onSelect} />
+            )
           ))}
         </ul>
       </div>

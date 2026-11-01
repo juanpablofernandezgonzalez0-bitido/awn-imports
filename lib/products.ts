@@ -10,6 +10,8 @@ export type Product = {
   tag?: string;
   description: string;
   sizes: string[];
+  /** Fotos de la prenda colgada en su gancho, en PNG/WebP sin fondo (1.ª frente, 2.ª espalda). */
+  hanger?: boolean;
 };
 
 export const products: Product[] = [
