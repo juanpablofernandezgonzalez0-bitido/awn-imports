@@ -173,30 +173,9 @@
   }
 }
 
-/* ── Portada: vitrina giratoria 3D ── */
-@keyframes spot-sway {
-  0%, 100% { transform: rotate(-0.7deg); }
-  50% { transform: rotate(0.7deg); }
-}
-
-.spot-sway {
-  transform-origin: 50% 0;
-  animation: spot-sway 6s ease-in-out infinite;
-}
-
-@keyframes spot-fill {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
-.spot-fill {
-  animation-name: spot-fill;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .spot-sway {
-    animation: none;
-  }
+/* ── Portada: logo ── */
+/* El logo trae un fondo gris cuadrado: lo difuminamos hacia el negro de la portada. */
+.hero-logo {
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 55%, transparent 100%);
 }
